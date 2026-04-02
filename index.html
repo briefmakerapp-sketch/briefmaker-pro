@@ -6,155 +6,81 @@
 <title>BriefMaker Pro — Générateur de documents IA</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #f7f6f3;
-    --white: #ffffff;
-    --text: #1a1917;
-    --muted: #6b6a66;
-    --border: #e2e0da;
-    --accent: #2563eb;
-    --accent-light: #eff6ff;
-    --accent-dark: #1d4ed8;
-    --green: #16a34a;
-    --green-light: #f0fdf4;
-    --red: #dc2626;
-    --red-light: #fef2f2;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-lg: 0 4px 16px rgba(0,0,0,0.10);
-    --radius: 10px;
-    --radius-sm: 6px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-  /* HEADER */
-  header { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 2rem; position: sticky; top: 0; z-index: 100; }
-  .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  .logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); letter-spacing: -0.5px; }
-  .logo span { color: var(--accent); }
-  .logo-badge { font-family: 'DM Sans', sans-serif; font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 20px; margin-left: 8px; font-weight: 500; vertical-align: middle; }
-  .header-right { display: flex; align-items: center; gap: 12px; }
-  .status-pill { font-size: 12px; display: flex; align-items: center; gap: 6px; background: var(--green-light); color: var(--green); padding: 4px 12px; border-radius: 20px; font-weight: 500; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
-
-  /* MAIN */
-  main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
-
-  /* HERO */
-  .hero { text-align: center; padding: 2.5rem 0 2rem; }
-  .hero h1 { font-family: 'DM Serif Display', serif; font-size: 42px; line-height: 1.15; color: var(--text); margin-bottom: 12px; letter-spacing: -1px; }
-  .hero h1 em { color: var(--accent); font-style: normal; }
-  .hero p { font-size: 17px; color: var(--muted); max-width: 520px; margin: 0 auto; line-height: 1.6; }
-
-  /* TABS */
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 1.75rem; }
-  .tab { font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; padding: 10px 18px; cursor: pointer; color: var(--muted); border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s, border-color .15s; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .count-badge { font-size: 11px; background: var(--bg); padding: 1px 6px; border-radius: 10px; margin-left: 5px; }
-  .panel { display: none; } .panel.active { display: block; }
-
-  /* TYPE GRID */
-  .type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
-  .type-card { padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: var(--white); transition: all .15s; text-align: center; }
-  .type-card:hover { border-color: var(--accent); background: var(--accent-light); }
-  .type-card.active { border: 2px solid var(--accent); background: var(--accent-light); }
-  .type-card .icon { font-size: 22px; margin-bottom: 6px; }
-  .type-card .label { font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.3; }
-  .type-card .desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  /* FORM */
-  .form-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-  .form-row { margin-bottom: 1rem; }
-  .form-row:last-child { margin-bottom: 0; }
-  .form-row label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
-  .form-row input, .form-row textarea {
-    width: 100%; font-size: 14px; font-family: 'DM Sans', sans-serif;
-    color: var(--text); background: var(--bg);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 9px 12px; resize: vertical; transition: border-color .15s;
-  }
-  .form-row input:focus, .form-row textarea:focus { outline: none; border-color: var(--accent); background: var(--white); }
-  .form-row textarea { min-height: 80px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* BUTTONS */
-  .btn-generate {
-    width: 100%; padding: 13px; font-size: 15px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif; color: var(--white);
-    background: var(--accent); border: none; border-radius: var(--radius);
-    cursor: pointer; transition: background .15s; margin-bottom: 1rem;
-    letter-spacing: -0.2px;
-  }
-  .btn-generate:hover { background: var(--accent-dark); }
-  .btn-generate:disabled { opacity: .5; cursor: default; }
-
-  /* RESULT */
-  .result-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
-  .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-  .result-title { font-size: 14px; font-weight: 500; color: var(--text); }
-  .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-  .action-btn {
-    font-size: 12px; font-family: 'DM Sans', sans-serif; padding: 5px 12px;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--bg); cursor: pointer; color: var(--text);
-    font-weight: 500; transition: all .15s;
-  }
-  .action-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-  .action-btn.green { background: var(--green-light); border-color: var(--green); color: var(--green); }
-  .result-content { font-size: 14px; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
-
-  /* LOADING */
-  .loading { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; padding: 1.5rem 0; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
-  .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-  @keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-
-  /* SHARE */
-  .share-box { background: var(--accent-light); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 10px 14px; display: flex; align-items: center; gap: 10px; margin-top: 1rem; }
-  .share-url { font-size: 12px; color: var(--accent); word-break: break-all; flex: 1; font-family: monospace; }
-  .copy-btn { font-size: 12px; padding: 4px 12px; border: 1px solid var(--accent); border-radius: var(--radius-sm); background: var(--white); color: var(--accent); cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; font-weight: 500; }
-
-  /* SAVED */
-  .saved-list { display: flex; flex-direction: column; gap: 10px; }
-  .saved-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; cursor: pointer; box-shadow: var(--shadow); transition: box-shadow .15s, border-color .15s; }
-  .saved-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); }
-  .saved-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .saved-title { font-size: 14px; font-weight: 500; color: var(--text); }
-  .saved-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .saved-preview { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .del-btn { font-size: 12px; padding: 4px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: none; cursor: pointer; color: var(--muted); font-family: 'DM Sans', sans-serif; transition: all .15s; }
-  .del-btn:hover { background: var(--red-light); border-color: var(--red); color: var(--red); }
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; line-height: 1.8; }
-  .empty .emoji { font-size: 36px; display: block; margin-bottom: 12px; }
-
-  /* TOAST */
-  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--white); font-size: 13px; font-family: 'DM Sans', sans-serif; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; white-space: nowrap; }
-  .toast.show { opacity: 1; }
-
-  /* FOOTER */
-  footer { text-align: center; padding: 2rem; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 3rem; }
-
-  /* RESPONSIVE */
-  @media(max-width:600px){
-    .hero h1{font-size:30px}
-    .form-grid{grid-template-columns:1fr}
-    .action-btns{gap:4px}
-    .header-inner{gap:8px}
-  }
-  .hidden { display: none; }
+:root{--bg:#f7f6f3;--white:#ffffff;--text:#1a1917;--muted:#6b6a66;--border:#e2e0da;--accent:#2563eb;--accent-light:#eff6ff;--accent-dark:#1d4ed8;--green:#16a34a;--green-light:#f0fdf4;--red:#dc2626;--red-light:#fef2f2;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-lg:0 4px 16px rgba(0,0,0,0.10);--radius:10px;--radius-sm:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:0;z-index:100}
+.header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);letter-spacing:-0.5px}
+.logo span{color:var(--accent)}
+.logo-badge{font-family:'DM Sans',sans-serif;font-size:11px;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:500;vertical-align:middle}
+.status-pill{font-size:12px;display:flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:500}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+main{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+.hero{text-align:center;padding:2.5rem 0 2rem}
+.hero h1{font-family:'DM Serif Display',serif;font-size:42px;line-height:1.15;color:var(--text);margin-bottom:12px;letter-spacing:-1px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{font-size:17px;color:var(--muted);max-width:520px;margin:0 auto;line-height:1.6}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:1.75rem}
+.tab{font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;padding:10px 18px;cursor:pointer;color:var(--muted);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.count-badge{font-size:11px;background:var(--bg);padding:1px 6px;border-radius:10px;margin-left:5px}
+.panel{display:none}.panel.active{display:block}
+.type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:1.5rem}
+.type-card{padding:12px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--white);transition:all .15s;text-align:center}
+.type-card:hover{border-color:var(--accent);background:var(--accent-light)}
+.type-card.active{border:2px solid var(--accent);background:var(--accent-light)}
+.type-card .icon{font-size:22px;margin-bottom:6px}
+.type-card .label{font-size:12px;font-weight:500;color:var(--text);line-height:1.3}
+.type-card .desc{font-size:11px;color:var(--muted);margin-top:2px}
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.form-row{margin-bottom:1rem}.form-row:last-child{margin-bottom:0}
+.form-row label{display:block;font-size:13px;font-weight:500;color:var(--muted);margin-bottom:6px}
+.form-row input,.form-row textarea{width:100%;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;resize:vertical;transition:border-color .15s}
+.form-row input:focus,.form-row textarea:focus{outline:none;border-color:var(--accent);background:var(--white)}
+.form-row textarea{min-height:80px}
+.btn-generate{width:100%;padding:13px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--white);background:var(--accent);border:none;border-radius:var(--radius);cursor:pointer;transition:background .15s;margin-bottom:1rem}
+.btn-generate:hover{background:var(--accent-dark)}
+.btn-generate:disabled{opacity:.5;cursor:default}
+.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}
+.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.result-title{font-size:14px;font-weight:500;color:var(--text)}
+.action-btns{display:flex;gap:6px;flex-wrap:wrap}
+.action-btn{font-size:12px;font-family:'DM Sans',sans-serif;padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);cursor:pointer;color:var(--text);font-weight:500;transition:all .15s}
+.action-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.action-btn.green{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.result-content{font-size:14px;line-height:1.8;color:var(--text);white-space:pre-wrap}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;padding:1.5rem 0}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.share-box{background:var(--accent-light);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:1rem}
+.share-url{font-size:12px;color:var(--accent);word-break:break-all;flex:1;font-family:monospace}
+.copy-btn{font-size:12px;padding:4px 12px;border:1px solid var(--accent);border-radius:var(--radius-sm);background:var(--white);color:var(--accent);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;font-weight:500}
+.saved-list{display:flex;flex-direction:column;gap:10px}
+.saved-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;cursor:pointer;box-shadow:var(--shadow);transition:box-shadow .15s,border-color .15s}
+.saved-card:hover{border-color:var(--accent);box-shadow:var(--shadow-lg)}
+.saved-top{display:flex;justify-content:space-between;align-items:flex-start}
+.saved-title{font-size:14px;font-weight:500;color:var(--text)}
+.saved-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.saved-preview{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.del-btn{font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
+.del-btn:hover{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:14px;line-height:1.8}
+.empty .emoji{font-size:36px;display:block;margin-bottom:12px}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--white);font-size:13px;font-family:'DM Sans',sans-serif;padding:10px 20px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1}
+footer{text-align:center;padding:2rem;font-size:13px;color:var(--muted);border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:600px){.hero h1{font-size:28px}.action-btns{gap:4px}}
+.hidden{display:none}
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-inner">
     <div class="logo">Brief<span>Maker</span> Pro <span class="logo-badge">IA</span></div>
-    <div class="header-right">
-      <div class="status-pill" id="statusPill">
-        <div class="status-dot"></div> Cloud connecté
-      </div>
-    </div>
+    <div class="status-pill"><div class="status-dot"></div> Cloud connecté</div>
   </div>
 </header>
 
@@ -189,7 +115,7 @@
       <div class="result-content" id="resultContent"></div>
       <div id="shareBox" class="share-box hidden">
         <span class="share-url" id="shareUrl"></span>
-        <button class="copy-btn" onclick="copyLink()">Copier</button>
+        <button class="copy-btn" onclick="copyLink()">Copier le lien</button>
       </div>
     </div>
   </div>
@@ -199,246 +125,195 @@
   </div>
 </main>
 
-<footer>BriefMaker Pro · Propulsé par l'IA Claude · Données stockées sur Supabase</footer>
+<footer>BriefMaker Pro · Propulsé par Claude AI · Données Supabase</footer>
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPA_URL = "https://nunnpxvergphuhqcfntd.supabase.co";
-const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51bm5weHZlcmdwaHVocWNmbnRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjU0NzUsImV4cCI6MjA5MDU0MTQ3NX0.8JbmTM_wGIEWXq3g7ALUcUTZ3zX_DocOLAGp50IBAIU";
-const ANTHROPIC_KEY = "VOTRE_CLE_ANTHROPIC_ICI"; // À remplacer
+const SUPA_URL="https://nunnpxvergphuhqcfntd.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51bm5weHZlcmdwaHVocWNmbnRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5NjU0NzUsImV4cCI6MjA5MDU0MTQ3NX0.8JbmTM_wGIEWXq3g7ALUcUTZ3zX_DocOLAGp50IBAIU";
+const ANTHROPIC_KEY="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";
 
-const forms = {
+const forms={
   brief:{label:"Brief marketing",icon:"📣",desc:"Campagne, contenu",fields:[
     {id:"produit",label:"Produit ou service",placeholder:"Ex: Nouvelle offre SaaS B2B",type:"input"},
     {id:"objectif",label:"Objectif",placeholder:"Ex: Générer 50 leads en 30 jours",type:"input"},
     {id:"cible",label:"Audience cible",placeholder:"Ex: Directeurs marketing PME",type:"input"},
-    {id:"budget",label:"Budget & délai",placeholder:"Ex: 5 000€, fin du mois",type:"input"},
-    {id:"contexte",label:"Contexte / infos utiles",placeholder:"Ton souhaité, concurrents, contraintes...",type:"textarea"}
-  ],prompt:f=>`Génère un brief marketing complet et professionnel. Produit: ${f.produit}. Objectif: ${f.objectif}. Audience: ${f.cible}. Budget: ${f.budget}. Contexte: ${f.contexte}. Sections: contexte, objectifs, audience, messages clés, canaux, KPIs, planning.`},
+    {id:"budget",label:"Budget et délai",placeholder:"Ex: 5 000 euros, fin du mois",type:"input"},
+    {id:"contexte",label:"Contexte et infos utiles",placeholder:"Ton souhaité, concurrents, contraintes...",type:"textarea"}
+  ],prompt:f=>`Génère un brief marketing complet et professionnel en français. Produit: ${f.produit}. Objectif: ${f.objectif}. Audience: ${f.cible}. Budget: ${f.budget}. Contexte: ${f.contexte}. Sections: contexte, objectifs, audience, messages clés, canaux, KPIs, planning.`},
   fiche:{label:"Fiche de poste",icon:"👤",desc:"Recrutement RH",fields:[
     {id:"poste",label:"Intitulé du poste",placeholder:"Ex: Responsable communication digitale",type:"input"},
-    {id:"entreprise",label:"Entreprise / équipe",placeholder:"Ex: Start-up SaaS 30 personnes",type:"input"},
+    {id:"entreprise",label:"Entreprise et équipe",placeholder:"Ex: Start-up SaaS 30 personnes",type:"input"},
     {id:"missions",label:"Missions principales",placeholder:"Ex: Gérer les réseaux sociaux, créer du contenu...",type:"textarea"},
-    {id:"profil",label:"Profil recherché",placeholder:"Ex: 3 ans d'expérience, autonome, créatif",type:"input"},
-    {id:"contrat",label:"Contrat & rémunération",placeholder:"Ex: CDI, 38-45k€ selon profil",type:"input"}
-  ],prompt:f=>`Rédige une fiche de poste professionnelle et attractive. Poste: ${f.poste}. Entreprise: ${f.entreprise}. Missions: ${f.missions}. Profil: ${f.profil}. Contrat: ${f.contrat}.`},
+    {id:"profil",label:"Profil recherché",placeholder:"Ex: 3 ans expérience, autonome, créatif",type:"input"},
+    {id:"contrat",label:"Contrat et rémunération",placeholder:"Ex: CDI, 38-45k selon profil",type:"input"}
+  ],prompt:f=>`Rédige une fiche de poste professionnelle et attractive en français. Poste: ${f.poste}. Entreprise: ${f.entreprise}. Missions: ${f.missions}. Profil: ${f.profil}. Contrat: ${f.contrat}.`},
   relance:{label:"Relance facturation",icon:"📩",desc:"Email client, impayé",fields:[
     {id:"client",label:"Nom du client",placeholder:"Ex: Société Martin SARL",type:"input"},
-    {id:"montant",label:"Montant & référence",placeholder:"Ex: 2 400€ HT — Facture n°2024-087",type:"input"},
+    {id:"montant",label:"Montant et référence",placeholder:"Ex: 2400 euros HT Facture n2024-087",type:"input"},
     {id:"echeance",label:"Retard",placeholder:"Ex: 15 jours de retard",type:"input"},
-    {id:"ton",label:"Ton souhaité",placeholder:"Ex: Cordial mais ferme / 1ère relance",type:"input"}
-  ],prompt:f=>`Rédige un email de relance facturation professionnel. Client: ${f.client}. Montant: ${f.montant}. Retard: ${f.echeance}. Ton: ${f.ton}. Inclure: objet, corps, appel à l'action.`},
+    {id:"ton",label:"Ton souhaité",placeholder:"Ex: Cordial mais ferme, 1ère relance",type:"input"}
+  ],prompt:f=>`Rédige un email de relance facturation professionnel en français. Client: ${f.client}. Montant: ${f.montant}. Retard: ${f.echeance}. Ton: ${f.ton}. Inclure: objet, corps, appel à l'action.`},
   cr:{label:"Compte-rendu",icon:"📋",desc:"Réunion, décisions",fields:[
     {id:"sujet",label:"Sujet de la réunion",placeholder:"Ex: Revue mensuelle commerciale Q3",type:"input"},
-    {id:"participants",label:"Participants",placeholder:"Ex: Marie (DG), Tom (Sales), Julie (Ops)",type:"input"},
+    {id:"participants",label:"Participants",placeholder:"Ex: Marie DG, Tom Sales, Julie Ops",type:"input"},
     {id:"points",label:"Points abordés",placeholder:"Ex: Chiffres du mois, retards, plan Q4...",type:"textarea"},
-    {id:"decisions",label:"Décisions & actions",placeholder:"Ex: Lancer AO avant le 20, Tom responsable",type:"textarea"}
-  ],prompt:f=>`Rédige un compte-rendu de réunion structuré. Sujet: ${f.sujet}. Participants: ${f.participants}. Points: ${f.points}. Décisions: ${f.decisions}.`},
+    {id:"decisions",label:"Décisions et actions",placeholder:"Ex: Lancer AO avant le 20, Tom responsable",type:"textarea"}
+  ],prompt:f=>`Rédige un compte-rendu de réunion structuré en français. Sujet: ${f.sujet}. Participants: ${f.participants}. Points: ${f.points}. Décisions: ${f.decisions}.`},
   cahier:{label:"Cahier des charges",icon:"📐",desc:"Projet, spec technique",fields:[
     {id:"projet",label:"Nom du projet",placeholder:"Ex: Refonte site e-commerce",type:"input"},
-    {id:"contexte",label:"Contexte & enjeux",placeholder:"Ex: Site vieillissant, perte de trafic...",type:"textarea"},
-    {id:"perimetre",label:"Périmètre",placeholder:"Ex: Front-end, mobile, tunnel d'achat",type:"textarea"},
-    {id:"contraintes",label:"Contraintes",placeholder:"Ex: Budget 20k€, livraison en 3 mois",type:"input"},
+    {id:"contexte",label:"Contexte et enjeux",placeholder:"Ex: Site vieillissant, perte de trafic...",type:"textarea"},
+    {id:"perimetre",label:"Périmètre",placeholder:"Ex: Front-end, mobile, tunnel achat",type:"textarea"},
+    {id:"contraintes",label:"Contraintes",placeholder:"Ex: Budget 20k, livraison en 3 mois",type:"input"},
     {id:"parties",label:"Parties prenantes",placeholder:"Ex: DSI, marketing, agence web",type:"input"}
-  ],prompt:f=>`Rédige un cahier des charges complet. Projet: ${f.projet}. Contexte: ${f.contexte}. Périmètre: ${f.perimetre}. Contraintes: ${f.contraintes}. Parties: ${f.parties}.`},
+  ],prompt:f=>`Rédige un cahier des charges complet en français. Projet: ${f.projet}. Contexte: ${f.contexte}. Périmètre: ${f.perimetre}. Contraintes: ${f.contraintes}. Parties: ${f.parties}.`},
   propcom:{label:"Proposition commerciale",icon:"💼",desc:"Offre client, devis",fields:[
-    {id:"client",label:"Client & contexte",placeholder:"Ex: PME 50 personnes, secteur retail",type:"input"},
+    {id:"client",label:"Client et contexte",placeholder:"Ex: PME 50 personnes, secteur retail",type:"input"},
     {id:"besoin",label:"Besoin identifié",placeholder:"Ex: Automatiser la facturation",type:"textarea"},
-    {id:"solution",label:"Solution proposée",placeholder:"Ex: Intégration ERP + formation équipe",type:"textarea"},
-    {id:"prix",label:"Tarification",placeholder:"Ex: 8 500€ HT en 3 phases",type:"input"},
-    {id:"validite",label:"Validité & contact",placeholder:"Ex: Valable 30 jours — contact@agence.fr",type:"input"}
-  ],prompt:f=>`Rédige une proposition commerciale professionnelle. Client: ${f.client}. Besoin: ${f.besoin}. Solution: ${f.solution}. Prix: ${f.prix}. Validité: ${f.validite}.`},
+    {id:"solution",label:"Solution proposée",placeholder:"Ex: Intégration ERP et formation équipe",type:"textarea"},
+    {id:"prix",label:"Tarification",placeholder:"Ex: 8500 euros HT en 3 phases",type:"input"},
+    {id:"validite",label:"Validité et contact",placeholder:"Ex: Valable 30 jours, contact@agence.fr",type:"input"}
+  ],prompt:f=>`Rédige une proposition commerciale professionnelle et convaincante en français. Client: ${f.client}. Besoin: ${f.besoin}. Solution: ${f.solution}. Prix: ${f.prix}. Validité: ${f.validite}.`},
   email:{label:"Email professionnel",icon:"✉️",desc:"Communication, suivi",fields:[
     {id:"destinataire",label:"Destinataire",placeholder:"Ex: DRH, client, partenaire",type:"input"},
     {id:"sujet",label:"Objet de l'email",placeholder:"Ex: Suite à notre réunion du 15...",type:"input"},
     {id:"message",label:"Message à faire passer",placeholder:"Ex: Confirmer la réunion, demander un document...",type:"textarea"},
-    {id:"ton",label:"Ton",placeholder:"Ex: Formel / Chaleureux / Urgent",type:"input"}
-  ],prompt:f=>`Rédige un email professionnel. Destinataire: ${f.destinataire}. Objet: ${f.sujet}. Message: ${f.message}. Ton: ${f.ton}.`}
+    {id:"ton",label:"Ton",placeholder:"Ex: Formel, Chaleureux, Urgent",type:"input"}
+  ],prompt:f=>`Rédige un email professionnel en français. Destinataire: ${f.destinataire}. Objet: ${f.sujet}. Message: ${f.message}. Ton: ${f.ton}.`}
 };
 
-let currentType = "brief";
+let currentType="brief";
 
-function toast(msg, bg="#1a1917") {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.style.background = bg;
-  t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2500);
+function toast(msg,bg="#1a1917"){const t=document.getElementById("toast");t.textContent=msg;t.style.background=bg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)}
+
+function switchTab(tab,el){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));el.classList.add("active");
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("panel-"+tab).classList.add("active");
+  if(tab==="saved")loadSaved();
 }
 
-function switchTab(tab, el) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  el.classList.add("active");
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-  document.getElementById("panel-" + tab).classList.add("active");
-  if (tab === "saved") loadSaved();
-}
-
-function renderTypes() {
-  document.getElementById("typeGrid").innerHTML = Object.entries(forms).map(([k,f]) =>
-    `<div class="type-card${k===currentType?" active":""}" data-type="${k}" onclick="selectType(this)">
-      <div class="icon">${f.icon}</div>
-      <div class="label">${f.label}</div>
-      <div class="desc">${f.desc}</div>
-    </div>`
+function renderTypes(){
+  document.getElementById("typeGrid").innerHTML=Object.entries(forms).map(([k,f])=>
+    `<div class="type-card${k===currentType?" active":""}" data-type="${k}" onclick="selectType(this)"><div class="icon">${f.icon}</div><div class="label">${f.label}</div><div class="desc">${f.desc}</div></div>`
   ).join("");
 }
 
-function selectType(el) {
-  document.querySelectorAll(".type-card").forEach(c => c.classList.remove("active"));
-  el.classList.add("active"); currentType = el.dataset.type;
-  renderForm(); document.getElementById("resultCard").classList.add("hidden");
+function selectType(el){
+  document.querySelectorAll(".type-card").forEach(c=>c.classList.remove("active"));
+  el.classList.add("active");currentType=el.dataset.type;
+  renderForm();document.getElementById("resultCard").classList.add("hidden");
 }
 
-function renderForm() {
-  document.getElementById("formSection").innerHTML = forms[currentType].fields.map(f => {
-    const inp = f.type === "textarea"
-      ? `<textarea id="${f.id}" placeholder="${f.placeholder}"></textarea>`
-      : `<input type="text" id="${f.id}" placeholder="${f.placeholder}"/>`;
-    return `<div class="form-row"><label>${f.label}</label>${inp}</div>`;
+function renderForm(){
+  document.getElementById("formSection").innerHTML=forms[currentType].fields.map(f=>{
+    const inp=f.type==="textarea"?`<textarea id="${f.id}" placeholder="${f.placeholder}"></textarea>`:`<input type="text" id="${f.id}" placeholder="${f.placeholder}"/>`;
+    return`<div class="form-row"><label>${f.label}</label>${inp}</div>`;
   }).join("");
 }
 
-async function generate() {
-  const f = forms[currentType];
-  const vals = {}; let empty = false;
-  f.fields.forEach(field => {
-    const el = document.getElementById(field.id);
-    vals[field.id] = el ? el.value.trim() : "";
-    if (!vals[field.id]) empty = true;
-  });
-  if (empty) { toast("Merci de remplir tous les champs.", "#dc2626"); return; }
-
-  const btn = document.getElementById("generateBtn");
-  const card = document.getElementById("resultCard");
-  const loading = document.getElementById("loadingIndicator");
-  const content = document.getElementById("resultContent");
-  const saveBtn = document.getElementById("saveBtn");
-
-  btn.disabled = true; card.classList.remove("hidden");
-  loading.classList.remove("hidden"); content.textContent = "";
-  document.getElementById("shareBox").classList.add("hidden");
-  document.getElementById("resultTitle").textContent = f.label;
-  saveBtn.textContent = "Sauvegarder"; saveBtn.classList.remove("green");
-
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({ model: "claude-opus-4-6", max_tokens: 1500, messages: [{ role: "user", content: f.prompt(vals) }] })
+async function generate(){
+  const f=forms[currentType];
+  const vals={};let empty=false;
+  f.fields.forEach(field=>{const el=document.getElementById(field.id);vals[field.id]=el?el.value.trim():"";if(!vals[field.id])empty=true});
+  if(empty){toast("Merci de remplir tous les champs.","#dc2626");return}
+  const btn=document.getElementById("generateBtn");
+  const card=document.getElementById("resultCard");
+  const loading=document.getElementById("loadingIndicator");
+  const content=document.getElementById("resultContent");
+  const saveBtn=document.getElementById("saveBtn");
+  btn.disabled=true;card.classList.remove("hidden");loading.classList.remove("hidden");
+  content.textContent="";document.getElementById("shareBox").classList.add("hidden");
+  document.getElementById("resultTitle").textContent=f.label;
+  saveBtn.textContent="Sauvegarder";saveBtn.classList.remove("green");
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1500,messages:[{role:"user",content:f.prompt(vals)}]})
     });
-    const data = await res.json();
+    const data=await res.json();
     loading.classList.add("hidden");
-    content.textContent = data.content?.map(b => b.text || "").join("") || "Erreur de génération.";
-  } catch(e) {
-    loading.classList.add("hidden");
-    content.textContent = "Erreur de connexion. Vérifiez votre clé API.";
-  }
-  btn.disabled = false;
+    content.textContent=data.content?.map(b=>b.text||"").join("")||"Erreur de génération.";
+  }catch(e){loading.classList.add("hidden");content.textContent="Erreur : "+e.message}
+  btn.disabled=false;
 }
 
-async function supaFetch(path, method="GET", body=null) {
-  const opts = { method, headers: { "apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY, "Content-Type": "application/json", "Prefer": "return=representation" } };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(SUPA_URL + path, opts);
+async function supaFetch(path,method="GET",body=null){
+  const opts={method,headers:{"apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Content-Type":"application/json","Prefer":"return=representation"}};
+  if(body)opts.body=JSON.stringify(body);
+  const r=await fetch(SUPA_URL+path,opts);
   return r.json();
 }
 
-async function saveDoc() {
-  const text = document.getElementById("resultContent").textContent;
-  if (!text) return;
-  const saveBtn = document.getElementById("saveBtn");
-  saveBtn.textContent = "Sauvegarde..."; saveBtn.disabled = true;
-  try {
-    const res = await supaFetch("/rest/v1/documents", "POST", { type: currentType, label: forms[currentType].label, content: text });
-    if (res && res[0] && res[0].id) {
-      const id = res[0].id;
-      document.getElementById("shareUrl").textContent = window.location.origin + "?doc=" + id;
+async function saveDoc(){
+  const text=document.getElementById("resultContent").textContent;if(!text)return;
+  const saveBtn=document.getElementById("saveBtn");
+  saveBtn.textContent="Sauvegarde...";saveBtn.disabled=true;
+  try{
+    const res=await supaFetch("/rest/v1/documents","POST",{type:currentType,label:forms[currentType].label,content:text});
+    if(res&&res[0]&&res[0].id){
+      document.getElementById("shareUrl").textContent=window.location.origin+"?doc="+res[0].id;
       document.getElementById("shareBox").classList.remove("hidden");
-      saveBtn.textContent = "✓ Sauvegardé"; saveBtn.classList.add("green");
-      toast("Sauvegardé dans le cloud !", "#16a34a");
-    } else {
-      saveBtn.textContent = "Sauvegarder";
-      toast("Erreur de sauvegarde.", "#dc2626");
-    }
-  } catch(e) { saveBtn.textContent = "Sauvegarder"; toast("Erreur réseau.", "#dc2626"); }
-  saveBtn.disabled = false;
+      saveBtn.textContent="Sauvegardé";saveBtn.classList.add("green");
+      toast("Sauvegardé dans le cloud !","#16a34a");
+    }else{saveBtn.textContent="Sauvegarder";toast("Erreur de sauvegarde.","#dc2626")}
+  }catch(e){saveBtn.textContent="Sauvegarder";toast("Erreur réseau.","#dc2626")}
+  saveBtn.disabled=false;
 }
 
-function copyLink() {
-  navigator.clipboard.writeText(document.getElementById("shareUrl").textContent)
-    .then(() => toast("Lien copié !"));
+function copyLink(){navigator.clipboard.writeText(document.getElementById("shareUrl").textContent).then(()=>toast("Lien copié !"))}
+
+function exportPDF(){
+  const text=document.getElementById("resultContent").textContent;if(!text)return;
+  const w=window.open("","_blank");
+  w.document.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title>"+forms[currentType].label+"</title><style>body{font-family:Georgia,serif;max-width:720px;margin:3rem auto;line-height:1.9;color:#1a1917;font-size:15px}h1{font-size:22px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid #e2e0da}pre{white-space:pre-wrap;font-family:inherit}</style></head><body><h1>"+forms[currentType].label+"</h1><pre>"+text+"</pre></body></html>");
+  w.document.close();setTimeout(()=>w.print(),400);
 }
 
-function exportPDF() {
-  const text = document.getElementById("resultContent").textContent;
-  if (!text) return;
-  const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${forms[currentType].label}</title>
-  <style>body{font-family:Georgia,serif;max-width:720px;margin:3rem auto;line-height:1.9;color:#1a1917;font-size:15px}
-  h1{font-size:22px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid #e2e0da}
-  pre{white-space:pre-wrap;font-family:inherit}</style></head>
-  <body><h1>${forms[currentType].label}</h1><pre>${text}</pre></body></html>`);
-  w.document.close(); setTimeout(() => w.print(), 400);
-}
-
-function exportWord() {
-  const text = document.getElementById("resultContent").textContent;
-  if (!text) return;
-  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><title>${forms[currentType].label}</title></head><body><h1>${forms[currentType].label}</h1><pre>${text}</pre></body></html>`;
-  const blob = new Blob([html], { type: "application/msword" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-  a.download = forms[currentType].label.replace(/ /g,"_") + ".doc"; a.click();
+function exportWord(){
+  const text=document.getElementById("resultContent").textContent;if(!text)return;
+  const html="<html><head><meta charset='utf-8'><title>"+forms[currentType].label+"</title></head><body><h1>"+forms[currentType].label+"</h1><pre>"+text+"</pre></body></html>";
+  const blob=new Blob([html],{type:"application/msword"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=forms[currentType].label.replace(/ /g,"_")+".doc";a.click();
   toast("Téléchargement Word lancé !");
 }
 
-async function loadSaved() {
-  const el = document.getElementById("savedList");
-  el.innerHTML = '<div class="empty"><span class="emoji">⏳</span>Chargement...</div>';
-  try {
-    const docs = await supaFetch("/rest/v1/documents?select=*&order=created_at.desc");
-    document.getElementById("savedCount").textContent = Array.isArray(docs) ? docs.length : 0;
-    if (!docs || !docs.length) {
-      el.innerHTML = '<div class="empty"><span class="emoji">📂</span>Aucun document sauvegardé.<br>Générez un document et cliquez sur "Sauvegarder".</div>';
-      return;
-    }
-    el.innerHTML = '<div class="saved-list">' + docs.map(doc => `
-      <div class="saved-card" onclick="openSaved(${JSON.stringify(doc).replace(/"/g,'&quot;')})">
-        <div class="saved-top">
-          <div>
-            <div class="saved-title">${forms[doc.type]?.icon || ""} ${doc.label}</div>
-            <div class="saved-meta">${new Date(doc.created_at).toLocaleDateString("fr-FR")}</div>
-          </div>
-          <button class="del-btn" onclick="event.stopPropagation();deleteDoc('${doc.id}')">Supprimer</button>
-        </div>
-        <div class="saved-preview">${doc.content.substring(0, 140)}...</div>
-      </div>`).join("") + '</div>';
-  } catch(e) {
-    el.innerHTML = '<div class="empty"><span class="emoji">⚠️</span>Erreur de connexion Supabase.</div>';
-  }
+async function loadSaved(){
+  const el=document.getElementById("savedList");
+  el.innerHTML='<div class="empty"><span class="emoji">loading</span>Chargement...</div>';
+  try{
+    const docs=await supaFetch("/rest/v1/documents?select=*&order=created_at.desc");
+    document.getElementById("savedCount").textContent=Array.isArray(docs)?docs.length:0;
+    if(!docs||!docs.length){el.innerHTML='<div class="empty"><span class="emoji">📂</span>Aucun document sauvegardé.<br>Générez un document et cliquez sur Sauvegarder.</div>';return}
+    el.innerHTML='<div class="saved-list">'+docs.map(doc=>`<div class="saved-card" onclick='openSaved(${JSON.stringify(doc)})'><div class="saved-top"><div><div class="saved-title">${forms[doc.type]?.icon||""} ${doc.label}</div><div class="saved-meta">${new Date(doc.created_at).toLocaleDateString("fr-FR")}</div></div><button class="del-btn" onclick="event.stopPropagation();deleteDoc('${doc.id}')">Supprimer</button></div><div class="saved-preview">${doc.content.substring(0,140)}...</div></div>`).join("")+'</div>';
+  }catch(e){el.innerHTML='<div class="empty"><span class="emoji">error</span>Erreur de connexion.</div>'}
 }
 
-function openSaved(doc) {
-  currentType = doc.type;
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+function openSaved(doc){
+  currentType=doc.type;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelector(".tab").classList.add("active");
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.getElementById("panel-generate").classList.add("active");
-  renderTypes(); renderForm();
+  renderTypes();renderForm();
   document.getElementById("resultCard").classList.remove("hidden");
   document.getElementById("loadingIndicator").classList.add("hidden");
-  document.getElementById("resultTitle").textContent = doc.label;
-  document.getElementById("resultContent").textContent = doc.content;
-  document.getElementById("shareUrl").textContent = window.location.origin + "?doc=" + doc.id;
+  document.getElementById("resultTitle").textContent=doc.label;
+  document.getElementById("resultContent").textContent=doc.content;
+  document.getElementById("shareUrl").textContent=window.location.origin+"?doc="+doc.id;
   document.getElementById("shareBox").classList.remove("hidden");
-  const saveBtn = document.getElementById("saveBtn");
-  saveBtn.textContent = "✓ Sauvegardé"; saveBtn.classList.add("green");
+  const saveBtn=document.getElementById("saveBtn");
+  saveBtn.textContent="Sauvegardé";saveBtn.classList.add("green");
 }
 
-async function deleteDoc(id) {
-  await supaFetch(`/rest/v1/documents?id=eq.${id}`, "DELETE");
-  toast("Document supprimé."); loadSaved();
+async function deleteDoc(id){
+  await supaFetch("/rest/v1/documents?id=eq."+id,"DELETE");
+  toast("Document supprimé.");loadSaved();
 }
 
-renderTypes(); renderForm(); loadSaved();
+renderTypes();renderForm();loadSaved();
 </script>
 </body>
 </html>
