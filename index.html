@@ -172,9 +172,9 @@ const docs = [
      {id:"can",l:"Canaux envisagés",ph:"Ex : Instagram, email, TikTok"}
    ],
    gen:v=>`BRIEF MARKETING
-══════════════════════════════════════
+----------------------------------------
 Marque : ${v.ent}  |  Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 1. CONTEXTE ET ENJEUX
 ${v.ent} lance "${v.prod}". Cette campagne vise à développer la visibilité et la croissance auprès de la cible définie.
@@ -219,10 +219,10 @@ ${v.can.split(",").map(c=>`• ${c.trim()} : contenu natif, régularité, engage
      {id:"ava",l:"Ce que vous offrez",ph:"Ex : Télétravail, primes, formation"}
    ],
    gen:v=>`OFFRE D'EMPLOI — ${v.pos.toUpperCase()}
-══════════════════════════════════════
+----------------------------------------
 Entreprise : ${v.ent}  |  Contrat : ${v.cnt}
 Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 QUI SOMMES-NOUS ?
 ${v.ent} est une structure dynamique et en croissance. Nous plaçons l'innovation et l'humain au cœur de notre développement. Rejoindre notre équipe, c'est intégrer un environnement stimulant où vos initiatives sont valorisées.
@@ -258,10 +258,10 @@ Candidatures traitées dans l'ordre de réception.`
      {id:"niv",l:"Niveau de relance",ph:"Ex : 1ère relance cordiale"}
    ],
    gen:v=>`RELANCE FACTURATION — ${v.niv.toUpperCase()}
-══════════════════════════════════════
+----------------------------------------
 Objet : Relance paiement — ${v.mnt}
 Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 Madame, Monsieur,
 
@@ -288,10 +288,10 @@ Cordialement,
      {id:"dec",l:"Décisions et actions",ph:"Ex : Lancer appel d'offres avant le 20...",type:"textarea"}
    ],
    gen:v=>`COMPTE-RENDU DE RÉUNION
-══════════════════════════════════════
+----------------------------------------
 Objet : ${v.suj}
 Date : ${today}  |  Participants : ${v.par}
-══════════════════════════════════════
+----------------------------------------
 
 RÉSUMÉ EXÉCUTIF
 Réunion du ${today} portant sur : ${v.suj}. Points clés examinés, décisions prises pour la suite.
@@ -303,11 +303,11 @@ DÉCISIONS ET PLAN D'ACTION
 ${v.dec}
 
 TABLEAU DES ACTIONS
-───────────────────────────────────────
+---------------------------------------
 Action            | Responsable | Délai
-───────────────────────────────────────
+---------------------------------------
 [À compléter selon les décisions ci-dessus]
-───────────────────────────────────────
+---------------------------------------
 
 PROCHAINES ÉTAPES
 • Suivi des actions définies
@@ -327,10 +327,10 @@ Validé par : _____________  Date : ${today}`
      {id:"dif",l:"Valeur ajoutée",ph:"Ex : Expertise contenu + visuels personnalisés"}
    ],
    gen:v=>`PROPOSITION COMMERCIALE
-══════════════════════════════════════
+----------------------------------------
 De : ${v.pre}  →  À : ${v.cli}
 Date : ${today}  |  Objet : ${v.off}
-══════════════════════════════════════
+----------------------------------------
 
 Madame, Monsieur,
 
@@ -382,10 +382,10 @@ Cordialement,
      {id:"liv",l:"Livrables attendus",ph:"Ex : Maquettes, développement, formation"}
    ],
    gen:v=>`CAHIER DES CHARGES
-══════════════════════════════════════
+----------------------------------------
 Projet : ${v.pro}  |  Version : 1.0
 Commanditaire : ${v.cmd}  |  Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 1. PRÉSENTATION
 Projet : ${v.pro}
@@ -438,9 +438,9 @@ Version 1.0 soumise à validation — ${today}`
      {id:"mod",l:"Modalités particulières",ph:"Ex : Propriété intellectuelle, confidentialité"}
    ],
    gen:v=>`CONTRAT DE PRESTATION DE SERVICES
-══════════════════════════════════════
+----------------------------------------
 ⚠ À faire valider par un professionnel juridique.
-══════════════════════════════════════
+----------------------------------------
 
 ENTRE LES SOUSSIGNÉS :
 Prestataire : ${v.pre}
@@ -493,10 +493,10 @@ ${v.pre}                           ${v.cli}`
      {id:"rec",l:"Recommandation souhaitée",ph:"Ex : Recommander ou non l'investissement"}
    ],
    gen:v=>`NOTE DE SYNTHÈSE — CONFIDENTIEL
-══════════════════════════════════════
+----------------------------------------
 À : ${v.des}  |  Objet : ${v.suj}
 Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 RÉSUMÉ EXÉCUTIF
 Analyse de ${v.suj} dans le contexte : ${v.ctx}.
@@ -548,10 +548,10 @@ Rédigé par : [Nom, fonction]  |  Date : ${today}`
      {id:"can",l:"Canaux disponibles",ph:"Ex : Instagram, newsletter, Pinterest"}
    ],
    gen:v=>`PLAN DE COMMUNICATION
-══════════════════════════════════════
+----------------------------------------
 Organisation : ${v.org}  |  Période : ${v.per}
 Date : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 1. DIAGNOSTIC
 ${v.org} engage une démarche de communication sur ${v.per}.
@@ -612,10 +612,10 @@ Mois 3 — Optimisation : analyse, ajustements, conversion
      {id:"nxt",l:"Objectifs du mois suivant",ph:"Ex : Lancer la newsletter, 100 clients"}
    ],
    gen:v=>`RAPPORT D'ACTIVITÉ MENSUEL
-══════════════════════════════════════
+----------------------------------------
 Organisation : ${v.org}  |  Période : ${v.per}
 Date de rédaction : ${today}
-══════════════════════════════════════
+----------------------------------------
 
 RÉSUMÉ DU MOIS
 ${v.per} — réalisations clés pour ${v.org} :
@@ -624,11 +624,11 @@ ${v.per} — réalisations clés pour ${v.org} :
 ${v.rea}
 
 2. TABLEAU DE BORD
-───────────────────────────────────────
+---------------------------------------
 Indicateur            | Réalisé
-───────────────────────────────────────
+---------------------------------------
 ${v.chf.split(",").map(c=>{const p=c.split(":");return p.length>1?`${p[0].trim().padEnd(21)}| ${p[1].trim()}`:`${c.trim().padEnd(21)}| —`}).join("\n")}
-───────────────────────────────────────
+---------------------------------------
 
 3. DIFFICULTÉS
 ${v.dif.split(",").map(d=>`• ${d.trim()}`).join("\n")}
@@ -637,11 +637,11 @@ ${v.dif.split(",").map(d=>`• ${d.trim()}`).join("\n")}
 Les réalisations confirment la trajectoire de ${v.org}. Points d'attention : ${v.dif}.
 
 5. PLAN D'ACTION — MOIS SUIVANT
-───────────────────────────────────────
+---------------------------------------
 Action               | Responsable | Délai
-───────────────────────────────────────
+---------------------------------------
 ${v.nxt.split(",").map((n,i)=>`${n.trim().substring(0,20).padEnd(20)} | [Resp.]     | J+${(i+1)*7}`).join("\n")}
-───────────────────────────────────────
+---------------------------------------
 
 6. RESSOURCES NÉCESSAIRES
 • Humaines : [À compléter]
