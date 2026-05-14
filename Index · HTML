@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BriefMaker Pro — Documents professionnels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#B8973A;--gold-dim:#7A6120;--ink:#1A1815;--ink-soft:#3D3830;
+  --muted:#8A8070;--surface:#FDFBF7;--surface2:#F5F0E8;
+  --border:#E2D9C8;--white:#fff;--r:10px;--rl:16px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--ink);min-height:100vh}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;height:56px;
+  position:sticky;top:0;z-index:100}
+.logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--ink)}
+.logo span{color:var(--gold)}
+.nbadge{font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--gold-dim);font-weight:600;letter-spacing:.05em}
+
+/* HERO */
+.hero{background:var(--surface2);padding:2.5rem 2rem 3rem;text-align:center;border-bottom:1px solid var(--border)}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,40px);
+  color:var(--ink);line-height:1.2;margin-bottom:.6rem}
+.hero h1 em{font-style:italic;color:var(--gold-dim)}
+.hero p{font-size:14px;color:var(--muted);max-width:460px;margin:0 auto}
+.pills{display:flex;justify-content:center;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);background:var(--white)}
+
+/* LAYOUT */
+.container{max-width:1080px;margin:0 auto;padding:2rem 1.25rem;
+  display:grid;grid-template-columns:260px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:720px){.container{grid-template-columns:1fr}}
+
+/* SIDEBAR */
+.sidebar{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;position:sticky;top:72px}
+.sb-head{padding:.6rem 1rem;background:var(--surface2);border-bottom:1px solid var(--border);
+  font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.doc-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid var(--border);transition:background .1s}
+.doc-item:last-child{border-bottom:none}
+.doc-item:hover{background:var(--surface2)}
+.doc-item.active{background:#FAF6EC;border-left:3px solid var(--gold)}
+.doc-item.active .dl{color:var(--ink);font-weight:500}
+.di{font-size:15px;flex-shrink:0}
+.dl{font-size:12px;color:var(--ink-soft)}
+
+/* PANEL */
+.panel{display:flex;flex-direction:column;gap:1.1rem}
+
+/* FORM CARD */
+.form-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.form-head{padding:.9rem 1.25rem;background:var(--surface2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px}
+.form-head h2{font-size:14px;font-weight:500;color:var(--ink)}
+.fh-icon{font-size:17px}
+.form-body{padding:1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.form-body{grid-template-columns:1fr}}
+.field-full{grid-column:1/-1}
+.field label{display:block;font-size:10px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:var(--r);
+  padding:7px 10px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);
+  background:var(--surface);outline:none;transition:border-color .15s}
+.field input:focus,.field textarea:focus{border-color:var(--gold);background:var(--white)}
+.field textarea{min-height:72px;resize:vertical}
+.err-msg{font-size:12px;color:#933;padding:0 1.25rem .9rem;display:none}
+
+/* ACTIONS */
+.actions{display:flex;gap:8px}
+.btn-gen{flex:1;padding:11px;border:none;border-radius:var(--r);background:var(--gold);
+  color:var(--white);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s}
+.btn-gen:hover{background:var(--gold-dim)}
+.btn-pdf{padding:11px 16px;border:1px solid var(--border);border-radius:var(--r);
+  background:var(--white);color:var(--ink-soft);font-size:12px;font-family:'DM Sans',sans-serif;
+  cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s}
+.btn-pdf:hover{background:var(--surface2)}
+.btn-pdf:disabled{opacity:.4;cursor:not-allowed}
+
+/* RESULT */
+.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;display:none}
+.result-head{padding:.8rem 1.25rem;background:var(--surface2);border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center}
+.result-head h3{font-size:13px;font-weight:500;color:var(--gold-dim);display:flex;align-items:center;gap:6px}
+.result-head h3::before{content:'';display:inline-block;width:6px;height:6px;
+  border-radius:50%;background:var(--gold)}
+.btn-copy{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:20px;
+  background:var(--white);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:color .15s,border-color .15s}
+.btn-copy:hover{color:var(--gold-dim);border-color:var(--gold)}
+.result-body{padding:1.1rem;font-size:13px;line-height:1.8;color:var(--ink-soft);
+  white-space:pre-wrap;max-height:460px;overflow-y:auto}
+
+footer{text-align:center;padding:1.5rem;font-size:11px;color:var(--muted);
+  border-top:1px solid var(--border);margin-top:1rem}
+footer strong{color:var(--gold-dim)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Brief<span>Maker</span> Pro</div>
+  <div class="nbadge">v3.0</div>
+</nav>
+
+<div class="hero">
+  <h1>Vos documents professionnels,<br><em>en quelques secondes.</em></h1>
+  <p>10 types de documents générés instantanément. Export PDF inclus.</p>
+  <div class="pills">
+    <div class="pill">✦ 10 documents</div>
+    <div class="pill">✦ Instantané</div>
+    <div class="pill">✦ Export PDF</div>
+    <div class="pill">✦ Gratuit</div>
+  </div>
+</div>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sb-head">Choisir un document</div>
+    <div id="docList"></div>
+  </aside>
+
+  <main class="panel">
+    <div class="form-card">
+      <div class="form-head">
+        <span class="fh-icon" id="formIcon"></span>
+        <h2 id="formTitle"></h2>
+      </div>
+      <div class="form-body" id="formBody"></div>
+      <div class="err-msg" id="errMsg">⚠ Merci de remplir tous les champs.</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-gen" onclick="generate()">✦ Générer le document</button>
+      <button class="btn-pdf" id="pdfBtn" onclick="exportPDF()" disabled>↓ PDF</button>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-head">
+        <h3 id="resultLabel">Document généré</h3>
+        <button class="btn-copy" onclick="copyDoc()">Copier</button>
+      </div>
+      <div class="result-body" id="resultBody"></div>
+    </div>
+  </main>
+</div>
+
+<footer><strong>BriefMaker Pro</strong> · Générateur de documents professionnels · v3.0</footer>
+
+<script>
+const today = new Date().toLocaleDateString("fr-FR");
+
+const docs = [
+  {id:"brief",label:"Brief marketing",icon:"📢",
+   fields:[
+     {id:"ent",l:"Entreprise / marque",ph:"Ex : Créative Dorée"},
+     {id:"prod",l:"Produit ou service",ph:"Ex : Transferts DTF personnalisés"},
+     {id:"obj",l:"Objectif de la campagne",ph:"Ex : Lancer la boutique Instagram"},
+     {id:"cib",l:"Cible",ph:"Ex : Femmes 25-45 ans, créatrices"},
+     {id:"bud",l:"Budget estimé",ph:"Ex : 500 € / mois"},
+     {id:"can",l:"Canaux envisagés",ph:"Ex : Instagram, email, TikTok"}
+   ],
+   gen:v=>`BRIEF MARKETING
+══════════════════════════════════════
+Marque : ${v.ent}  |  Date : ${today}
+══════════════════════════════════════
+
+1. CONTEXTE ET ENJEUX
+${v.ent} lance "${v.prod}". Cette campagne vise à développer la visibilité et la croissance auprès de la cible définie.
+
+2. OBJECTIFS SMART
+• Principal : ${v.obj}
+• Budget alloué : ${v.bud}
+• Suivi : KPIs définis en section 6
+
+3. CIBLE
+${v.cib} — actifs sur ${v.can}, sensibles aux contenus authentiques.
+Motivations : qualité, personnalisation, rapport qualité/prix.
+
+4. MESSAGES CLÉS
+• ${v.prod} par ${v.ent} : qualité, unicité, accessibilité.
+• Ton : chaleureux, expert, inspirant.
+• Angle : bénéfices concrets et émotionnels du produit.
+
+5. CANAUX RECOMMANDÉS
+${v.can.split(",").map(c=>`• ${c.trim()} : contenu natif, régularité, engagement prioritaires.`).join("\n")}
+
+6. KPIs
+• Portée et impressions par publication
+• Taux d'engagement (likes, partages, commentaires)
+• Clics boutique / taux de conversion
+• Coût par acquisition (si budget publicitaire)
+
+7. RECOMMANDATIONS
+• Budget ${v.bud} — prioriser canaux à fort ROI organique
+• Cohérence visuelle sur tous les canaux
+• Minimum 3 publications/semaine
+• Tester 2 formats différents le 1er mois`
+  },
+
+  {id:"poste",label:"Fiche de poste",icon:"👤",
+   fields:[
+     {id:"ent",l:"Nom de l'entreprise",ph:"Ex : CRÉALAB"},
+     {id:"pos",l:"Intitulé du poste",ph:"Ex : Chargé(e) de communication digitale"},
+     {id:"cnt",l:"Type de contrat",ph:"Ex : CDI, Temps plein"},
+     {id:"mis",l:"Missions principales",ph:"Ex : Gérer les réseaux sociaux, créer du contenu"},
+     {id:"pro",l:"Profil recherché",ph:"Ex : Bac+3 communication, 2 ans d'expérience"},
+     {id:"ava",l:"Ce que vous offrez",ph:"Ex : Télétravail, primes, formation"}
+   ],
+   gen:v=>`OFFRE D'EMPLOI — ${v.pos.toUpperCase()}
+══════════════════════════════════════
+Entreprise : ${v.ent}  |  Contrat : ${v.cnt}
+Date : ${today}
+══════════════════════════════════════
+
+QUI SOMMES-NOUS ?
+${v.ent} est une structure dynamique et en croissance. Nous plaçons l'innovation et l'humain au cœur de notre développement. Rejoindre notre équipe, c'est intégrer un environnement stimulant où vos initiatives sont valorisées.
+
+LE POSTE
+Nous recrutons un(e) ${v.pos} en ${v.cnt}.
+
+VOS MISSIONS
+${v.mis.split(",").map((m,i)=>`${i+1}. ${m.trim()}`).join("\n")}
+
+Compétences attendues :
+• Autonomie et organisation
+• Qualités rédactionnelles et relationnelles
+• Maîtrise des outils numériques
+• Esprit d'équipe et initiative
+
+PROFIL RECHERCHÉ
+${v.pro}
+
+CE QUE NOUS OFFRONS
+${v.ava.split(",").map(a=>`• ${a.trim()}`).join("\n")}
+
+POSTULER
+Envoyez CV + lettre de motivation à ${v.ent}.
+Candidatures traitées dans l'ordre de réception.`
+  },
+
+  {id:"relance",label:"Relance facture",icon:"🧾",
+   fields:[
+     {id:"cli",l:"Nom du client",ph:"Ex : Société Martin SARL"},
+     {id:"mnt",l:"Montant & référence facture",ph:"Ex : 2 400 € HT — Facture n°2024-087"},
+     {id:"ret",l:"Retard",ph:"Ex : 15 jours de retard"},
+     {id:"niv",l:"Niveau de relance",ph:"Ex : 1ère relance cordiale"}
+   ],
+   gen:v=>`RELANCE FACTURATION — ${v.niv.toUpperCase()}
+══════════════════════════════════════
+Objet : Relance paiement — ${v.mnt}
+Date : ${today}
+══════════════════════════════════════
+
+Madame, Monsieur,
+
+Nous faisons suite à notre facture ${v.mnt}, dont l'échéance est désormais dépassée de ${v.ret}.
+
+Sauf erreur de notre part, nous n'avons pas encore reçu votre règlement. Nous vous serions reconnaissants de bien vouloir procéder au paiement dans les 8 jours suivant la réception de ce message.
+
+Si ce règlement a déjà été effectué, veuillez ne pas tenir compte de ce courrier et nous en informer.
+
+En cas de difficulté, n'hésitez pas à nous contacter pour convenir d'un arrangement.
+
+Sans réponse dans le délai imparti, nous nous verrons contraints d'engager les démarches de recouvrement prévues par la loi.
+
+Cordialement,
+[Votre nom et coordonnées]
+[Votre entreprise]`
+  },
+
+  {id:"cr",label:"Compte-rendu",icon:"📝",
+   fields:[
+     {id:"suj",l:"Sujet de la réunion",ph:"Ex : Revue mensuelle commerciale Q3"},
+     {id:"par",l:"Participants",ph:"Ex : Marie (DG), Tom (Sales)"},
+     {id:"pts",l:"Points abordés",ph:"Ex : Chiffres, retards, plan Q4...",type:"textarea"},
+     {id:"dec",l:"Décisions et actions",ph:"Ex : Lancer appel d'offres avant le 20...",type:"textarea"}
+   ],
+   gen:v=>`COMPTE-RENDU DE RÉUNION
+══════════════════════════════════════
+Objet : ${v.suj}
+Date : ${today}  |  Participants : ${v.par}
+══════════════════════════════════════
+
+RÉSUMÉ EXÉCUTIF
+Réunion du ${today} portant sur : ${v.suj}. Points clés examinés, décisions prises pour la suite.
+
+POINTS ABORDÉS
+${v.pts}
+
+DÉCISIONS ET PLAN D'ACTION
+${v.dec}
+
+TABLEAU DES ACTIONS
+───────────────────────────────────────
+Action            | Responsable | Délai
+───────────────────────────────────────
+[À compléter selon les décisions ci-dessus]
+───────────────────────────────────────
+
+PROCHAINES ÉTAPES
+• Suivi des actions définies
+• Prochaine réunion : [date à fixer]
+• ODJ prévisionnel : point sur actions engagées
+
+Validé par : _____________  Date : ${today}`
+  },
+
+  {id:"propcom",label:"Proposition commerciale",icon:"📋",
+   fields:[
+     {id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB"},
+     {id:"cli",l:"Client cible",ph:"Ex : Boutique Elara Mode"},
+     {id:"bes",l:"Besoin identifié",ph:"Ex : Refonte présence Instagram"},
+     {id:"off",l:"Votre offre",ph:"Ex : Pack Community Management 3 mois"},
+     {id:"tar",l:"Tarif",ph:"Ex : 1 200 € / mois HT"},
+     {id:"dif",l:"Valeur ajoutée",ph:"Ex : Expertise contenu + visuels personnalisés"}
+   ],
+   gen:v=>`PROPOSITION COMMERCIALE
+══════════════════════════════════════
+De : ${v.pre}  →  À : ${v.cli}
+Date : ${today}  |  Objet : ${v.off}
+══════════════════════════════════════
+
+Madame, Monsieur,
+
+Suite à nos échanges, nous avons le plaisir de vous adresser cette proposition commerciale personnalisée.
+
+1. VOTRE BESOIN
+${v.cli} fait face à : ${v.bes}.
+Cet enjeu impacte votre visibilité et vos résultats. Une action structurée s'impose.
+
+2. NOTRE SOLUTION
+Nous vous proposons : ${v.off}
+
+Cette offre est spécialement conçue pour répondre à votre problématique et atteindre vos objectifs.
+
+3. MÉTHODOLOGIE
+• Phase 1 — Audit et cadrage (semaine 1)
+• Phase 2 — Mise en œuvre et production (semaines 2–10)
+• Phase 3 — Suivi, optimisation et reporting (mensuel)
+
+4. LIVRABLES
+• Stratégie personnalisée documentée
+• Production et diffusion des contenus définis
+• Reporting mensuel avec KPIs
+• Suivi et disponibilité continus
+
+5. INVESTISSEMENT
+Tarif : ${v.tar}
+Facturation mensuelle — paiement à 30 jours.
+
+6. POURQUOI NOUS CHOISIR ?
+${v.dif}
+
+Nous nous engageons sur des résultats mesurables et une communication transparente.
+
+7. PROCHAINE ÉTAPE
+Échangeons lors d'un appel de 30 minutes pour affiner cette proposition.
+
+Cordialement,
+[Nom, fonction — ${v.pre}]`
+  },
+
+  {id:"cdc",label:"Cahier des charges",icon:"📌",
+   fields:[
+     {id:"pro",l:"Nom du projet",ph:"Ex : Refonte site e-commerce"},
+     {id:"cmd",l:"Commanditaire",ph:"Ex : CRÉALAB pour cliente Elara"},
+     {id:"ctx",l:"Contexte et problématique",ph:"Ex : Site obsolète, taux de rebond 80%"},
+     {id:"obj",l:"Objectifs",ph:"Ex : Augmenter les ventes de 30% en 6 mois"},
+     {id:"per",l:"Périmètre et contraintes",ph:"Ex : Budget 5 000 €, livraison en 2 mois"},
+     {id:"liv",l:"Livrables attendus",ph:"Ex : Maquettes, développement, formation"}
+   ],
+   gen:v=>`CAHIER DES CHARGES
+══════════════════════════════════════
+Projet : ${v.pro}  |  Version : 1.0
+Commanditaire : ${v.cmd}  |  Date : ${today}
+══════════════════════════════════════
+
+1. PRÉSENTATION
+Projet : ${v.pro}
+Commanditaire : ${v.cmd}
+Contexte : ${v.ctx}
+
+2. OBJECTIFS
+${v.obj.split(",").map((o,i)=>`${i+1}. ${o.trim()}`).join("\n")}
+
+3. PÉRIMÈTRE
+Inclus : ${v.per}
+Exclus : [À préciser par le commanditaire]
+
+4. SPÉCIFICATIONS FONCTIONNELLES
+• [Fonctionnalité 1 — à détailler]
+• [Fonctionnalité 2]
+• [Fonctionnalité 3]
+
+5. CONTRAINTES
+${v.per.split(",").map(c=>`• ${c.trim()}`).join("\n")}
+
+6. LIVRABLES ATTENDUS
+${v.liv.split(",").map((l,i)=>`${i+1}. ${l.trim()}`).join("\n")}
+
+7. VALIDATION
+• Recette par le commanditaire à chaque livraison
+• Délai de retour : 5 jours ouvrés
+• Critères : conformité aux spécifications
+
+8. PLANNING
+• Cadrage : J+0  •  Production : J+7
+• Livraison intermédiaire : J+30
+• Livraison finale : selon contrainte
+
+9. INTERLOCUTEURS
+• Commanditaire : ${v.cmd}
+• Chef de projet : [À désigner]
+• Prestataire : [À compléter]
+
+Version 1.0 soumise à validation — ${today}`
+  },
+
+  {id:"contrat",label:"Contrat de prestation",icon:"✍️",
+   fields:[
+     {id:"pre",l:"Prestataire",ph:"Ex : Céline Martin, auto-entrepreneur"},
+     {id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},
+     {id:"mis",l:"Mission",ph:"Ex : Community management Instagram"},
+     {id:"dur",l:"Durée",ph:"Ex : 3 mois renouvelables"},
+     {id:"tar",l:"Rémunération",ph:"Ex : 1 200 € HT / mois"},
+     {id:"mod",l:"Modalités particulières",ph:"Ex : Propriété intellectuelle, confidentialité"}
+   ],
+   gen:v=>`CONTRAT DE PRESTATION DE SERVICES
+══════════════════════════════════════
+⚠ À faire valider par un professionnel juridique.
+══════════════════════════════════════
+
+ENTRE LES SOUSSIGNÉS :
+Prestataire : ${v.pre}
+Client : ${v.cli}
+
+ARTICLE 1 — OBJET
+Mission : ${v.mis}
+
+ARTICLE 2 — DURÉE
+${v.dur} — renouvelable par accord express des deux parties.
+
+ARTICLE 3 — RÉMUNÉRATION
+${v.tar} — facture en début de période, paiement à réception.
+Pénalités de retard applicables selon la loi.
+
+ARTICLE 4 — OBLIGATIONS DU PRESTATAIRE
+• Réaliser la mission avec soin et professionnalisme
+• Respecter les délais convenus
+• Informer le client de tout obstacle
+• Maintenir la confidentialité des informations
+
+ARTICLE 5 — OBLIGATIONS DU CLIENT
+• Fournir les informations et accès nécessaires
+• Régler les factures dans les délais convenus
+• Désigner un interlocuteur disponible
+
+ARTICLE 6 — PROPRIÉTÉ INTELLECTUELLE ET CONFIDENTIALITÉ
+${v.mod}
+Les créations sont transmises au client après règlement intégral.
+
+ARTICLE 7 — RÉSILIATION
+Préavis de 30 jours par lettre recommandée avec AR.
+
+ARTICLE 8 — LITIGES
+Recherche amiable avant tout recours judiciaire.
+Tribunal compétent : lieu du siège du prestataire.
+
+Fait en deux exemplaires — Le ${today}
+
+Prestataire : __________________  Client : __________________
+${v.pre}                           ${v.cli}`
+  },
+
+  {id:"note",label:"Note de synthèse",icon:"📄",
+   fields:[
+     {id:"suj",l:"Sujet",ph:"Ex : Analyse du marché DTF en France"},
+     {id:"des",l:"Destinataire",ph:"Ex : Comité de direction"},
+     {id:"ctx",l:"Contexte",ph:"Ex : Décision d'investissement sur nouveau matériel"},
+     {id:"src",l:"Sources / données disponibles",ph:"Ex : Données marché 2024, retours clients"},
+     {id:"rec",l:"Recommandation souhaitée",ph:"Ex : Recommander ou non l'investissement"}
+   ],
+   gen:v=>`NOTE DE SYNTHÈSE — CONFIDENTIEL
+══════════════════════════════════════
+À : ${v.des}  |  Objet : ${v.suj}
+Date : ${today}
+══════════════════════════════════════
+
+RÉSUMÉ EXÉCUTIF
+Analyse de ${v.suj} dans le contexte : ${v.ctx}.
+Recommandation formulée à destination de ${v.des}.
+
+1. CONTEXTE ET PROBLÉMATIQUE
+${v.ctx}
+
+2. SOURCES UTILISÉES
+${v.src.split(",").map(s=>`• ${s.trim()}`).join("\n")}
+
+3. ANALYSE
+
+Situation actuelle
+Les données (${v.src}) indiquent une situation nécessitant une décision structurée.
+
+Enjeux et implications
+Les décisions dans ce domaine ont un impact direct sur l'activité et les résultats.
+
+Options envisageables
+• Option A : Action immédiate — impact rapide, ressources à mobiliser
+• Option B : Action progressive — moindre risque, résultats différés
+• Option C : Statu quo — risque d'inaction à évaluer
+
+4. RISQUES ET OPPORTUNITÉS
+Opportunités : compétitivité accrue, optimisation, création de valeur.
+Risques : coût, résistance au changement, délais.
+
+5. RECOMMANDATION
+${v.rec}
+À valider par ${v.des} avant mise en œuvre.
+
+6. PROCHAINES ÉTAPES
+1. Validation par ${v.des}
+2. Plan d'action détaillé
+3. Désignation d'un responsable
+4. Point d'étape dans 30 jours
+
+Rédigé par : [Nom, fonction]  |  Date : ${today}`
+  },
+
+  {id:"plancom",label:"Plan de communication",icon:"📡",
+   fields:[
+     {id:"org",l:"Organisation / marque",ph:"Ex : @goodmybudget"},
+     {id:"obj",l:"Objectif de communication",ph:"Ex : Atteindre 5 000 abonnés en 3 mois"},
+     {id:"cib",l:"Cible",ph:"Ex : Femmes 28-45 ans, finances perso"},
+     {id:"per",l:"Période",ph:"Ex : Juillet–Septembre 2026"},
+     {id:"bud",l:"Budget",ph:"Ex : 200 € / mois ou organique"},
+     {id:"can",l:"Canaux disponibles",ph:"Ex : Instagram, newsletter, Pinterest"}
+   ],
+   gen:v=>`PLAN DE COMMUNICATION
+══════════════════════════════════════
+Organisation : ${v.org}  |  Période : ${v.per}
+Date : ${today}
+══════════════════════════════════════
+
+1. DIAGNOSTIC
+${v.org} engage une démarche de communication sur ${v.per}.
+Enjeu : visibilité et engagement auprès de ${v.cib}.
+Budget : ${v.bud}.
+
+2. OBJECTIFS
+Principal : ${v.obj}
+Secondaires :
+• Renforcer la notoriété de ${v.org}
+• Générer l'engagement et fidéliser la communauté
+• Convertir l'audience en clients ou abonnés actifs
+
+3. CIBLE
+${v.cib}
+Attentes : contenu utile, authentique, inspirant, régulier.
+
+4. TERRITOIRE DE COMMUNICATION
+Ton : expert et accessible, chaleureux, bienveillant.
+Messages clés : ce que ${v.org} apporte concrètement chaque semaine.
+
+5. PLAN PAR CANAL
+${v.can.split(",").map(c=>`
+Canal : ${c.trim()}
+• Contenus : éducatif, inspirationnel, coulisses, témoignages
+• Fréquence : 3 à 5 publications/semaine
+• Formats : carrousels, Reels, Stories`).join("\n")}
+
+6. CALENDRIER
+Mois 1 — Lancement : présentation, valeurs, 1er contenu pilier
+Mois 2 — Développement : séries thématiques, engagement
+Mois 3 — Optimisation : analyse, ajustements, conversion
+
+7. BUDGET : ${v.bud}
+• Création de contenu : 50%
+• Promotion / publicité : 30%
+• Outils et abonnements : 20%
+
+8. KPIs
+• Croissance abonnés mensuelle
+• Taux d'engagement par publication
+• Portée organique vs payante
+• Clics et taux de conversion
+
+9. VIGILANCE
+• Maintenir la régularité en toute circonstance
+• Adapter aux algorithmes sans sacrifier l'authenticité
+• Analyser avant de scaler les dépenses`
+  },
+
+  {id:"rapport",label:"Rapport d'activité",icon:"📊",
+   fields:[
+     {id:"org",l:"Organisation / projet",ph:"Ex : BriefMaker Pro"},
+     {id:"per",l:"Période couverte",ph:"Ex : Avril 2026"},
+     {id:"rea",l:"Réalisations principales",ph:"Ex : 50 nouveaux utilisateurs...",type:"textarea"},
+     {id:"chf",l:"Chiffres clés",ph:"Ex : CA : 800 €, Abonnés : +120"},
+     {id:"dif",l:"Difficultés rencontrées",ph:"Ex : Problème Stripe, manque de temps"},
+     {id:"nxt",l:"Objectifs du mois suivant",ph:"Ex : Lancer la newsletter, 100 clients"}
+   ],
+   gen:v=>`RAPPORT D'ACTIVITÉ MENSUEL
+══════════════════════════════════════
+Organisation : ${v.org}  |  Période : ${v.per}
+Date de rédaction : ${today}
+══════════════════════════════════════
+
+RÉSUMÉ DU MOIS
+${v.per} — réalisations clés pour ${v.org} :
+
+1. RÉALISATIONS
+${v.rea}
+
+2. TABLEAU DE BORD
+───────────────────────────────────────
+Indicateur            | Réalisé
+───────────────────────────────────────
+${v.chf.split(",").map(c=>{const p=c.split(":");return p.length>1?`${p[0].trim().padEnd(21)}| ${p[1].trim()}`:`${c.trim().padEnd(21)}| —`}).join("\n")}
+───────────────────────────────────────
+
+3. DIFFICULTÉS
+${v.dif.split(",").map(d=>`• ${d.trim()}`).join("\n")}
+
+4. ENSEIGNEMENTS
+Les réalisations confirment la trajectoire de ${v.org}. Points d'attention : ${v.dif}.
+
+5. PLAN D'ACTION — MOIS SUIVANT
+───────────────────────────────────────
+Action               | Responsable | Délai
+───────────────────────────────────────
+${v.nxt.split(",").map((n,i)=>`${n.trim().substring(0,20).padEnd(20)} | [Resp.]     | J+${(i+1)*7}`).join("\n")}
+───────────────────────────────────────
+
+6. RESSOURCES NÉCESSAIRES
+• Humaines : [À compléter]
+• Financières : [Budget à allouer]
+• Outils : [À préciser]
+
+Rapport rédigé le ${today} — ${v.org}`
+  }
+];
+
+let cur = docs[0];
+let lastDoc = "";
+
+function init() {
+  const list = document.getElementById("docList");
+  docs.forEach((d,i) => {
+    const el = document.createElement("div");
+    el.className = "doc-item" + (i===0?" active":"");
+    el.onclick = () => pick(i);
+    el.innerHTML = `<span class="di">${d.icon}</span><span class="dl">${d.label}</span>`;
+    list.appendChild(el);
+  });
+  renderForm();
+}
+
+function pick(i) {
+  cur = docs[i];
+  document.querySelectorAll(".doc-item").forEach((el,j) => el.classList.toggle("active",j===i));
+  renderForm();
+  document.getElementById("resultCard").style.display = "none";
+  document.getElementById("pdfBtn").disabled = true;
+  document.getElementById("errMsg").style.display = "none";
+  lastDoc = "";
+}
+
+function renderForm() {
+  document.getElementById("formIcon").textContent = cur.icon;
+  document.getElementById("formTitle").textContent = cur.label;
+  document.getElementById("formBody").innerHTML = cur.fields.map(f => `
+    <div class="field ${f.type==="textarea"?"field-full":""}">
+      <label>${f.l}</label>
+      ${f.type==="textarea"
+        ?`<textarea id="f_${f.id}" placeholder="${f.ph}"></textarea>`
+        :`<input type="text" id="f_${f.id}" placeholder="${f.ph}"/>`}
+    </div>`).join("");
+}
+
+function generate() {
+  const v = {};
+  let empty = false;
+  cur.fields.forEach(f => {
+    const el = document.getElementById("f_"+f.id);
+    v[f.id] = el ? el.value.trim() : "";
+    if (!v[f.id]) empty = true;
+  });
+  const err = document.getElementById("errMsg");
+  if (empty) { err.style.display = "block"; return; }
+  err.style.display = "none";
+  lastDoc = cur.gen(v);
+  document.getElementById("resultLabel").textContent = cur.label + " — généré ✓";
+  document.getElementById("resultBody").textContent = lastDoc;
+  const card = document.getElementById("resultCard");
+  card.style.display = "block";
+  card.scrollIntoView({behavior:"smooth",block:"nearest"});
+  document.getElementById("pdfBtn").disabled = false;
+}
+
+function copyDoc() {
+  if (!lastDoc) return;
+  navigator.clipboard.writeText(lastDoc).then(() => {
+    const b = document.querySelector(".btn-copy");
+    b.textContent = "Copié !";
+    setTimeout(() => b.textContent = "Copier", 2000);
+  });
+}
+
+function exportPDF() {
+  if (!lastDoc || !window.jspdf) return;
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+  const M=18, W=210-M*2;
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(14);
+  doc.setTextColor(26,24,21);
+  doc.text(cur.label, M, 22);
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(8);
+  doc.setTextColor(138,128,112);
+  doc.text("BriefMaker Pro · "+today, M, 29);
+  doc.setDrawColor(184,151,58);
+  doc.line(M, 32, 210-M, 32);
+  doc.setFontSize(10);
+  doc.setTextColor(30,30,30);
+  const lines = doc.splitTextToSize(lastDoc, W);
+  let y = 40;
+  lines.forEach(ln => {
+    if (y > 280) { doc.addPage(); y = 18; }
+    doc.text(ln, M, y);
+    y += 5.5;
+  });
+  doc.setFontSize(7);
+  doc.setTextColor(180,170,155);
+  doc.text("Généré par BriefMaker Pro — briefmaker-pro.vercel.app", M, 291);
+  doc.save(cur.label.replace(/\s+/g,"-").toLowerCase()+".pdf");
+}
+
+init();
+</script>
+</body>
+</html>
