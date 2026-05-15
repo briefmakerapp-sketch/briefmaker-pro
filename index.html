@@ -69,7 +69,8 @@ nav{background:var(--blue);padding:0 2rem;display:flex;align-items:center;justif
 .feats-inner{max-width:1100px;margin:0 auto}
 .feats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.25rem;margin-top:1.5rem}
 .feat{background:var(--wh);border:1px solid var(--brd);border-radius:var(--rl);padding:1.1rem}
-.feat-icon{font-size:18px;margin-bottom:.5rem;display:block}
+.feat-ico{width:36px;height:36px;background:var(--blue-l);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:.65rem;flex-shrink:0}
+.feat-ico svg{width:18px;height:18px;stroke:var(--blue);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .feat-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:.25rem}
 .feat-desc{font-size:11.5px;color:var(--mut);line-height:1.5}
 /* LP FOOTER */
@@ -113,7 +114,9 @@ nav{background:var(--blue);padding:0 2rem;display:flex;align-items:center;justif
 .dl{font-size:10.5px;color:var(--ink-s);line-height:1.3}
 /* MAIN */
 .main{padding:1rem;display:flex;flex-direction:column;gap:.85rem;max-width:760px}
-.breadcrumb{font-size:11px;color:var(--mut);display:flex;align-items:center;gap:4px}
+.breadcrumb{font-size:11px;color:var(--mut);display:flex;align-items:center;gap:5px}
+.breadcrumb .ico{width:16px;height:16px}
+.breadcrumb .ico svg{width:11px;height:11px;stroke:var(--mut);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .breadcrumb b{color:var(--blue)}
 .legal-tag{display:inline-flex;align-items:center;gap:5px;font-size:10px;background:var(--grn-l);color:var(--grn);padding:3px 9px;border-radius:20px;border:1px solid #C8E6D4;font-weight:500}
 .form-card{background:var(--wh);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
@@ -128,6 +131,7 @@ nav{background:var(--blue);padding:0 2rem;display:flex;align-items:center;justif
 .field input,.field textarea{width:100%;border:1px solid var(--brd);border-radius:var(--r);padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--surf);outline:none;transition:border-color .15s}
 .field input:focus,.field textarea:focus{border-color:var(--blue);background:var(--wh)}
 .field textarea{min-height:62px;resize:vertical}
+.field textarea.corps-lettre{min-height:240px;font-size:12px;line-height:1.7}
 .err-msg{font-size:11px;color:#933;padding:0 1rem .7rem;display:none}
 .legal-note{font-size:11px;color:var(--grn);background:var(--grn-l);border:1px solid #C8E6D4;border-radius:var(--r);padding:.55rem .9rem;display:flex;align-items:flex-start;gap:5px}
 .actions{display:flex;gap:8px}
@@ -144,9 +148,31 @@ nav{background:var(--blue);padding:0 2rem;display:flex;align-items:center;justif
 .btn-copy:hover{color:var(--blue);border-color:var(--blue)}
 .result-body{padding:1rem;font-size:11.5px;line-height:1.85;color:var(--ink-s);white-space:pre-wrap;max-height:460px;overflow-y:auto}
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;color:var(--mut);text-align:center;gap:.5rem}
-.empty-icon{font-size:34px;opacity:.3}
+.empty-icon{opacity:.25;margin-bottom:.25rem}
+.empty-icon svg{width:40px;height:40px;stroke:var(--mut);fill:none;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
 footer{text-align:center;padding:1rem;font-size:11px;color:var(--mut);border-top:1px solid var(--brd)}
 footer strong{color:var(--blue)}
+/* ── ICÔNES SVG ────────────────────────────── */
+.ico{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico svg{display:block;stroke-linecap:round;stroke-linejoin:round}
+/* Cartes landing */
+.cc-icon{display:flex;justify-content:center;margin-bottom:.55rem}
+.cc-icon .ico{width:38px;height:38px;background:var(--blue-l);border-radius:10px}
+.cc-icon .ico svg{width:20px;height:20px;stroke:var(--blue);fill:none;stroke-width:1.6}
+/* Sidebar accordéon */
+.cti{display:flex;align-items:center}
+.cti .ico{width:22px;height:22px;margin-right:2px}
+.cti .ico svg{width:13px;height:13px;stroke:var(--mut);fill:none;stroke-width:1.8}
+.cat-toggle.open .cti .ico svg{stroke:var(--blue)}
+/* Items doc */
+.di{display:flex;align-items:center;justify-content:center;width:16px}
+.di .ico{width:15px;height:15px}
+.di .ico svg{width:11px;height:11px;stroke:var(--mut);fill:none;stroke-width:1.8}
+.doc-item.active .di .ico svg{stroke:var(--blue)}
+/* En-tête formulaire */
+.fh-icon{display:flex;align-items:center}
+.fh-icon .ico{width:30px;height:30px;background:var(--blue-l);border-radius:7px}
+.fh-icon .ico svg{width:16px;height:16px;stroke:var(--blue);fill:none;stroke-width:1.6}
 </style>
 </head>
 <body>
@@ -179,7 +205,7 @@ footer strong{color:var(--blue)}
     </div>
   </div>
   <div class="legal-banner">
-    <span>⚖️</span>
+    <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--grn)" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     <span>Tous les documents intègrent les références légales françaises en vigueur — Code du travail, Code civil, Code de commerce, RGPD (2025/2026)</span>
   </div>
   <div class="stats">
@@ -198,12 +224,36 @@ footer strong{color:var(--blue)}
       <h2 style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);margin-bottom:.4rem">Pourquoi BriefMaker Pro ?</h2>
       <p style="font-size:13px;color:var(--mut)">La solution la plus simple pour vos documents professionnels en France</p>
       <div class="feats-grid">
-        <div class="feat"><span class="feat-icon">⚖️</span><div class="feat-title">Conforme au droit français</div><div class="feat-desc">Références légales intégrées : Code du travail, Code civil, RGPD, réglementations 2025/2026.</div></div>
-        <div class="feat"><span class="feat-icon">⚡</span><div class="feat-title">Génération instantanée</div><div class="feat-desc">Remplissez les champs et cliquez. Votre document est prêt en quelques secondes.</div></div>
-        <div class="feat"><span class="feat-icon">📄</span><div class="feat-title">Export PDF professionnel</div><div class="feat-desc">PDF formaté avec références légales, prêt à imprimer ou envoyer.</div></div>
-        <div class="feat"><span class="feat-icon">🔒</span><div class="feat-title">Données confidentielles</div><div class="feat-desc">Aucune donnée stockée sur nos serveurs. Tout reste sur votre appareil.</div></div>
-        <div class="feat"><span class="feat-icon">🇫🇷</span><div class="feat-title">100% en français</div><div class="feat-desc">Modèles rédigés en français, adaptés au contexte juridique et aux usages français.</div></div>
-        <div class="feat"><span class="feat-icon">🕐</span><div class="feat-title">Horodatage automatique</div><div class="feat-desc">Chaque document est daté automatiquement à l'heure et au jour réels de génération.</div></div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="feat-title">Conforme au droit français</div>
+          <div class="feat-desc">Références légales intégrées : Code du travail, Code civil, RGPD, réglementations 2025/2026.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="feat-title">Génération instantanée</div>
+          <div class="feat-desc">Remplissez les champs et cliquez. Votre document est prêt en quelques secondes.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="feat-title">Export PDF professionnel</div>
+          <div class="feat-desc">PDF formaté avec références légales, prêt à imprimer ou envoyer.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="feat-title">Données confidentielles</div>
+          <div class="feat-desc">Aucune donnée stockée sur nos serveurs. Tout reste sur votre appareil.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="feat-title">100% en français</div>
+          <div class="feat-desc">Modèles rédigés en français, adaptés au contexte juridique et aux usages français.</div>
+        </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="feat-title">Horodatage automatique</div>
+          <div class="feat-desc">Chaque document est daté automatiquement à l'heure et au jour réels de génération.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -222,13 +272,13 @@ footer strong{color:var(--blue)}
   </div>
   <div class="layout">
     <aside class="sidebar">
-      <div class="sb-s"><input type="text" id="searchInput" placeholder="🔍 Rechercher..." oninput="filterDocs(this.value)"/></div>
+      <div class="sb-s"><input type="text" id="searchInput" placeholder="Rechercher un document..." oninput="filterDocs(this.value)"/></div>
       <div id="docList"></div>
     </aside>
     <div style="display:flex;flex-direction:column">
       <main class="main" id="mainPanel">
         <div class="empty">
-          <div class="empty-icon">📄</div>
+          <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
           <div style="font-size:13px;font-weight:500;color:var(--ink-s)">Choisissez un document</div>
           <div style="font-size:12px">Sélectionnez un modèle dans la sidebar</div>
         </div>
@@ -268,10 +318,55 @@ function showApp(ci){
   window.scrollTo(0,0);
 }
 
+// ── BIBLIOTHÈQUE D'ICÔNES SVG (monochrome bleu) ───────────────
+const SVG={
+  // Catégories
+  rh:    `<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  jur:   `<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+  fin:   `<svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+  mk:    `<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+  gest:  `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>`,
+  lettre:`<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  // Documents RH
+  offre: `<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+  cdi:   `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+  doc:   `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+  badge: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>`,
+  warn:  `<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  hand:  `<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  wallet:`<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
+  star:  `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  home:  `<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  receipt:`<svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+  // Juridique
+  lock:  `<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+  file:  `<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+  link:  `<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  send:  `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  copy:  `<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`,
+  // Finance
+  calc:  `<svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="12" y1="10" x2="14" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="12" y1="14" x2="14" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="12" y1="18" x2="14" y2="18"/></svg>`,
+  invoice:`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
+  bell:  `<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+  chart: `<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+  // Ventes
+  speaker:`<svg viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>`,
+  list:  `<svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+  // Gestion
+  edit:  `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+  trend: `<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+  target:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  // Lettres
+  mail:  `<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  door:  `<svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/><circle cx="10" cy="13" r="1"/></svg>`,
+  alert: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+};
+function ico(name){return `<span class="ico">${SVG[name]||SVG.doc}</span>`;}
+
 // ── CATALOGUE ────────────────────────────────────────────────
 const catalogue=[
-{cat:"Ressources humaines",catIcon:"👥",docs:[
-{id:"rh-offre",label:"Offre d'emploi",icon:"📢",legal:"Art. L.5331-1 C.trav. — Non-discrimination",
+{cat:"Ressources humaines",catIcon:"rh",docs:[
+{id:"rh-offre",label:"Offre d'emploi",icon:"offre",legal:"Art. L.5331-1 C.trav. — Non-discrimination",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"poste",l:"Poste",ph:"Ex : Chargé(e) marketing"},{id:"contrat",l:"Contrat",ph:"Ex : CDI temps plein"},{id:"lieu",l:"Lieu",ph:"Ex : Paris / Télétravail"},{id:"missions",l:"Missions",ph:"Ex : Gérer réseaux, créer contenus...",type:"textarea"},{id:"profil",l:"Profil",ph:"Ex : Bac+3, 2 ans exp."},{id:"ava",l:"Avantages",ph:"Ex : Télétravail, TR, mutuelle"}],
  gen:v=>`OFFRE D'EMPLOI — ${v.poste.toUpperCase()}
 Entreprise : ${v.ent} | Contrat : ${v.contrat} | Lieu : ${v.lieu}
@@ -297,7 +392,7 @@ ${v.ava.split(",").map(a=>`- ${a.trim()}`).join("\n")}
 CANDIDATURE : recrutement@${v.ent.toLowerCase().replace(/\s+/g,"")}.fr
 CV + lettre de motivation. Traitement dans l'ordre de reception.`},
 
-{id:"rh-cdi",label:"Contrat CDI",icon:"✍️",legal:"Art. L.1221-1 et suivants C.trav. 2025",
+{id:"rh-cdi",label:"Contrat CDI",icon:"cdi",legal:"Art. L.1221-1 et suivants C.trav. 2025",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"naiss",l:"Né(e) le / à",ph:"Ex : 15/03/1990 à Lyon"},{id:"poste",l:"Poste / qualification",ph:"Ex : Chargée communication"},{id:"debut",l:"Date de début",ph:"Ex : 02/06/2026"},{id:"salaire",l:"Salaire brut mensuel",ph:"Ex : 2 200,00 € brut"},{id:"essai",l:"Période d'essai",ph:"Ex : 2 mois renouvelables"},{id:"cc",l:"Convention collective",ph:"Ex : Syntec IDCC 1486"}],
  gen:v=>`CONTRAT DE TRAVAIL A DUREE INDETERMINEE (CDI)
 Conforme Code du travail — Version 2025
@@ -337,7 +432,7 @@ Fait le ${window.TODAY}, en deux exemplaires.
 Employeur : _________________     Salarie(e) : _________________
 ${v.ent}                           ${v.salarie} ("Lu et approuve")`},
 
-{id:"rh-cdd",label:"Contrat CDD",icon:"📄",legal:"Art. L.1242-1 et suivants — Motifs limitatifs",
+{id:"rh-cdd",label:"Contrat CDD",icon:"doc",legal:"Art. L.1242-1 et suivants — Motifs limitatifs",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Paul Martin"},{id:"poste",l:"Poste",ph:"Ex : Assistant(e) admin."},{id:"motif",l:"Motif légal (obligatoire)",ph:"Ex : Accroissement temporaire activité (L.1242-2 2°)"},{id:"debut",l:"Début",ph:"Ex : 01/06/2026"},{id:"fin",l:"Fin",ph:"Ex : 31/08/2026"},{id:"salaire",l:"Salaire brut",ph:"Ex : 1 900,00 € brut/mois"},{id:"cc",l:"Convention collective",ph:"Ex : Syntec"}],
  gen:v=>`CONTRAT DE TRAVAIL A DUREE DETERMINEE (CDD)
 Conforme Art. L.1242-1 et suivants C.trav. 2025
@@ -371,7 +466,7 @@ Hors ces cas : dommages et interets.
 
 Fait le ${window.TODAY}. Employeur : _______  Salarie(e) : _______  ("Lu et approuve")`},
 
-{id:"rh-attestation",label:"Attestation d'emploi",icon:"🏅",legal:"Art. L.1221-15 C.trav. — Délivrance obligatoire",
+{id:"rh-attestation",label:"Attestation d'emploi",icon:"badge",legal:"Art. L.1221-15 C.trav. — Délivrance obligatoire",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"sign",l:"Signataire",ph:"Ex : Sophie Martin, DRH"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"poste",l:"Poste",ph:"Ex : Chargée communication"},{id:"contrat_t",l:"Type contrat",ph:"Ex : CDI / CDD jusqu'au XX/XX"},{id:"debut",l:"Date d'entrée",ph:"Ex : 15 mars 2024"},{id:"salaire",l:"Salaire brut mensuel",ph:"Ex : 2 200 € brut"},{id:"dest",l:"Destinataire",ph:"Ex : Banque / Bailleur / France Travail"}],
  gen:v=>`ATTESTATION D'EMPLOI
 (Art. L.1221-15 du Code du travail — Delivrance obligatoire sur demande)
@@ -393,32 +488,24 @@ Delivree pour valoir ce que de droit aupres de : ${v.dest}.
 Fait le ${window.TODAY}. Signature + cachet :
 ${v.sign} — ${v.ent}`},
 
-{id:"rh-avertissement",label:"Avertissement disciplinaire",icon:"⚠️",legal:"Art. L.1332-1 C.trav. — Procédure respectée",
- fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Jean Martin"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"faits",l:"Faits reprochés (précis et datés)",ph:"Ex : Le 10/05/2026, 2h de retard sans justification...",type:"textarea"},{id:"date_f",l:"Date des faits",ph:"Ex : 10 mai 2026"}],
- gen:v=>`${v.ent} — Le ${window.TODAY}
-[Remise en main propre contre decharge ou LRAR]
+{id:"rh-avertissement",label:"Avertissement disciplinaire",icon:"warn",legal:"Art. L.1332-1 C.trav. — Procédure respectée",pdfType:"lettre",
+ fields:[
+   {id:"exp",l:"Entreprise (émetteur)",ph:"Ex : CRÉALAB SAS"},
+   {id:"adresse_exp",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
+   {id:"salarie",l:"Salarié(e) destinataire",ph:"Ex : Jean Martin"},
+   {id:"adresse_dest",l:"Adresse salarié(e)",ph:"Ex : 5 rue du Parc, 75020 Paris"},
+   {id:"poste",l:"Poste",ph:"Ex : Commercial"},
+   {id:"objet",l:"Objet",ph:"Ex : Avertissement disciplinaire"},
+   {id:"corps",l:"Corps de la lettre (faits reprochés + notification)",ph:"Nous avons constaté les faits suivants vous concernant, le [date des faits] :\n\n[Décrire précisément les faits : nature du manquement, heure, contexte, témoins éventuels...]\n\nCes faits constituent un manquement à vos obligations professionnelles en violation des règles en vigueur dans notre entreprise.\n\nConformément à l'article L.1332-1 du Code du travail, nous vous notifions le présent avertissement.\n\nNous vous demandons expressément de ne pas renouveler ces comportements. Tout nouvel incident pourra donner lieu à une sanction disciplinaire plus sévère, pouvant aller jusqu'au licenciement pour faute.\n\nVous disposez d'un délai de 2 mois à compter de la notification pour contester cette sanction devant le Conseil de prud'hommes (art. L.1471-1 du Code du travail).\n\nVeuillez agréer, Madame / Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}
+ ],
+ gen:v=>`${v.corps}
 
-A : ${v.salarie} — ${v.poste}
+[Nom et qualité du signataire]
+${v.exp}
 
-OBJET : Avertissement disciplinaire (art. L.1332-1 C.trav.)
+Mode de remise : Remise en main propre contre décharge / LRAR`,},
 
-Nous avons constate les faits suivants le ${v.date_f} :
-${v.faits}
-
-Ces faits constituent un manquement a vos obligations professionnelles.
-Conformement a l'art. L.1332-1 du Code du travail, nous vous notifions
-le present avertissement.
-
-[Note : L'avertissement ne necessite pas d'entretien prealable —
-Cass. soc. Jurisprudence constante. Sanction plus grave : procedure L.1332-2.]
-
-Tout renouvellement pourra entrainer une sanction plus severe.
-
-VOIES DE RECOURS : 2 mois pour saisir le CPH (art. L.1471-1 C.trav.).
-
-[Nom, Qualite] — ${v.ent}`},
-
-{id:"rh-solde",label:"Solde de tout compte",icon:"💼",legal:"Art. L.1234-20 — Délai contestation 6 mois",
+{id:"rh-solde",label:"Solde de tout compte",icon:"wallet",legal:"Art. L.1234-20 — Délai contestation 6 mois",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Jean Dupont"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"fin",l:"Date fin contrat",ph:"Ex : 31 mai 2026"},{id:"motif",l:"Motif de rupture",ph:"Ex : Licenciement / Démission / Rupture conventionnelle"},{id:"montant",l:"Montant net total",ph:"Ex : 3 850,00 € net"}],
  gen:v=>`RECU POUR SOLDE DE TOUT COMPTE
 (Article L.1234-20 du Code du travail)
@@ -444,7 +531,7 @@ Attestation France Travail delivree (R.1234-9).
 
 Le ${window.TODAY}. Employeur : _______  Salarie(e) : _______ ("Lu et approuve")`},
 
-{id:"rh-teletravail",label:"Accord télétravail",icon:"🏠",legal:"Art. L.1222-9 C.trav. — ANI 26/11/2020",
+{id:"rh-teletravail",label:"Accord télétravail",icon:"home",legal:"Art. L.1222-9 C.trav. — ANI 26/11/2020",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"poste",l:"Poste",ph:"Ex : Chargée communication"},{id:"jours",l:"Jours télétravail",ph:"Ex : Lundi et mercredi"},{id:"debut",l:"Date d'effet",ph:"Ex : 01/06/2026"},{id:"duree",l:"Durée",ph:"Ex : 12 mois renouvelables"}],
  gen:v=>`AVENANT TELETRAVAIL
 (Art. L.1222-9 C.trav. — ANI Teletravail 26/11/2020)
@@ -471,7 +558,7 @@ ART.6 — RGPD : respect de la politique donnees de ${v.ent}.
 Fait le ${window.TODAY}.
 Employeur : _______  Salarie(e) : _______ ("Lu et approuve")`},
 
-{id:"rh-note-frais",label:"Note de frais",icon:"🧾",legal:"Barème URSSAF/DMFP 2025 — Exonération de charges",
+{id:"rh-note-frais",label:"Note de frais",icon:"receipt",legal:"Barème URSSAF/DMFP 2025 — Exonération de charges",
  fields:[{id:"salarie",l:"Salarié(e)",ph:"Ex : Jean Dupont"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"periode",l:"Période",ph:"Ex : Mai 2026"},{id:"mission",l:"Objet / mission",ph:"Ex : Déplacement client Lyon — Salon PRO"}],
  gen:v=>`NOTE DE FRAIS PROFESSIONNELS
 Bareme URSSAF/DMFP 2025 — Exoneree de charges sociales dans les limites.
@@ -500,8 +587,8 @@ Je certifie l'exactitude des informations. ${v.salarie} : _______  Date : ${wind
 Validation manager : _______  | Comptabilite : _______`}
 ]},
 
-{cat:"Juridique & Contrats",catIcon:"⚖️",docs:[
-{id:"jur-nda",label:"NDA — Confidentialité",icon:"🔒",legal:"Loi 2018-670 — Secret des affaires L.151-1 C.com.",
+{cat:"Juridique & Contrats",catIcon:"jur",docs:[
+{id:"jur-nda",label:"NDA — Confidentialité",icon:"lock",legal:"Loi 2018-670 — Secret des affaires L.151-1 C.com.",
  fields:[{id:"p1",l:"Partie 1",ph:"Ex : CRÉALAB SAS"},{id:"p2",l:"Partie 2",ph:"Ex : XYZ SARL"},{id:"objet",l:"Objet confidentiel",ph:"Ex : Développement application mobile"},{id:"duree",l:"Durée",ph:"Ex : 3 ans à compter de la signature"}],
  gen:v=>`ACCORD DE CONFIDENTIALITE (NDA)
 Loi n°2018-670 du 30/07/2018 — Protection du secret des affaires.
@@ -533,7 +620,7 @@ ART.6 — RETOUR : restitution/destruction sur demande.
 Droit francais applicable. Fait le ${window.TODAY}.
 ${v.p1} : _______     ${v.p2} : _______`},
 
-{id:"jur-cgv",label:"CGV",icon:"📃",legal:"Art. L.441-1 C.com. — RGPD — L.221-18 rétractation",
+{id:"jur-cgv",label:"CGV",icon:"file",legal:"Art. L.441-1 C.com. — RGPD — L.221-18 rétractation",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"siret",l:"SIRET / N° TVA",ph:"Ex : 123 456 789 / FR12345678900"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"activite",l:"Activité",ph:"Ex : Prestations communication digitale"},{id:"contact",l:"Email SAV",ph:"Ex : contact@crealab.fr"},{id:"med",l:"Médiateur consommation",ph:"Ex : CM2C — mediateur@cm2c.net"}],
  gen:v=>`CONDITIONS GENERALES DE VENTE (CGV)
 ${v.ent} — SIRET : ${v.siret} — ${v.siege}
@@ -567,7 +654,7 @@ ART.9 — MEDIATION (L.612-1) : ${v.med}
 
 ${v.ent} — ${window.TODAY}`},
 
-{id:"jur-prestation",label:"Contrat de prestation",icon:"🤝",legal:"Code civil art. 1710 — Indépendance obligatoire",
+{id:"jur-prestation",label:"Contrat de prestation",icon:"hand",legal:"Code civil art. 1710 — Indépendance obligatoire",
  fields:[{id:"pre",l:"Prestataire",ph:"Ex : CRÉALAB / Céline Martin AE"},{id:"siret",l:"SIRET prestataire",ph:"Ex : 987 654 321 00011"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"mis",l:"Mission (livrables précis)",ph:"Ex : Community management Instagram — 3 mois"},{id:"dur",l:"Durée",ph:"Ex : Du 01/06/2026 au 31/08/2026"},{id:"tar",l:"Rémunération",ph:"Ex : 1 500 € HT / mois"},{id:"preavis",l:"Préavis résiliation",ph:"Ex : 30 jours LRAR"}],
  gen:v=>`CONTRAT DE PRESTATION DE SERVICES
 Code civil — Articles 1710 et suivants.
@@ -600,30 +687,23 @@ ART.8 — RESILIATION : preavis ${v.preavis}.
 
 Fait le ${window.TODAY}. ${v.pre} : _______  ${v.cli} : _______`},
 
-{id:"jur-mise-en-demeure",label:"Mise en demeure",icon:"📮",legal:"Code civil art. 1344 — Fait courir les intérêts",
- fields:[{id:"exp",l:"Expéditeur",ph:"Ex : CRÉALAB SAS"},{id:"dest",l:"Destinataire",ph:"Ex : XYZ SARL"},{id:"objet",l:"Objet du litige",ph:"Ex : Facture FAC-2026-042 — 3 500 € HT impayée"},{id:"delai",l:"Délai accordé",ph:"Ex : 8 jours calendaires"}],
- gen:v=>`${v.exp} — Le ${window.TODAY}
-LETTRE RECOMMANDEE AVEC ACCUSE DE RECEPTION
-(Art. 1344 Code civil — Fait courir les interets de plein droit)
+{id:"jur-mise-en-demeure",label:"Mise en demeure",icon:"send",legal:"Code civil art. 1344 — Fait courir les intérêts",pdfType:"lettre",
+ fields:[
+   {id:"exp",l:"Votre nom / entreprise",ph:"Ex : CRÉALAB SAS"},
+   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 12 rue des Arts, 75011 Paris"},
+   {id:"dest",l:"Destinataire",ph:"Ex : XYZ SARL — M. Dupont"},
+   {id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 5 avenue de la Gare, 69002 Lyon"},
+   {id:"objet",l:"Objet",ph:"Ex : Mise en demeure — Facture FAC-2026-042 impayée"},
+   {id:"delai",l:"Délai accordé",ph:"Ex : 8 jours calendaires"},
+   {id:"corps",l:"Corps de la lettre",ph:"Par la présente lettre recommandée avec accusé de réception, et conformément à l'article 1344 du Code civil, nous vous mettons en demeure de procéder au règlement de la facture n°FAC-2026-042 d'un montant de [montant] €, dont l'échéance était fixée au [date échéance].\n\nMalgré nos relances des [dates], ce règlement n'est toujours pas intervenu.\n\nNous vous accordons un délai de [X] jours calendaires à compter de la réception de la présente pour régulariser cette situation.\n\nPassé ce délai, nous nous verrons contraints d'engager toute procédure de recouvrement appropriée, dont les frais seront à votre charge, incluant les pénalités de retard au taux de 3 fois le taux légal et l'indemnité forfaitaire de recouvrement de 40 euros (art. D.441-5 du Code de commerce).\n\nNous espérons que cette situation pourra être résolue à l'amiable.\n\nVeuillez agréer, Madame, Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}
+ ],
+ gen:v=>`${v.corps}
 
-A : ${v.dest}
+${v.exp}
 
-OBJET : MISE EN DEMEURE — ${v.objet}
+PJ : [Copie facture(s) — Bon(s) de commande — Échanges antérieurs]`},
 
-Par la presente, nous vous mettons en demeure de regulariser
-dans un delai de ${v.delai} a compter de la reception.
-
-MOTIF : ${v.objet}
-
-A defaut : action judiciaire + dommages et interets (art. 1231-6 C.civ.)
-+ penalites de retard + frais de recouvrement a votre charge.
-
-RESERVATION DE TOUS DROITS.
-
-[Nom, Signature] | ${v.exp}
-PJ : [Copies justificatifs]`},
-
-{id:"jur-cession-droits",label:"Cession droits d'auteur",icon:"©️",legal:"CPI art. L.131-1 à L.131-7 — Cession écrite obligatoire",
+{id:"jur-cession-droits",label:"Cession droits d'auteur",icon:"copy",legal:"CPI art. L.131-1 à L.131-7 — Cession écrite obligatoire",
  fields:[{id:"auteur",l:"Auteur (cédant)",ph:"Ex : Marie Dupont, graphiste freelance"},{id:"cess",l:"Cessionnaire",ph:"Ex : CRÉALAB SAS"},{id:"oeuvre",l:"Œuvres cédées (précises)",ph:"Ex : Logo + charte graphique + 10 visuels"},{id:"terr",l:"Territoire",ph:"Ex : Monde entier"},{id:"duree",l:"Durée",ph:"Ex : Durée légale protection (70 ans post-mortem)"},{id:"prix",l:"Prix de cession",ph:"Ex : 800 € HT inclus dans prestation"}],
  gen:v=>`CONTRAT DE CESSION DE DROITS D'AUTEUR
 Code de la propriete intellectuelle — Art. L.131-1 a L.131-7
@@ -655,8 +735,8 @@ Auteur : _______     Cessionnaire : _______
 ${v.auteur}          ${v.cess}`}
 ]},
 
-{cat:"Finance & Comptabilité",catIcon:"💰",docs:[
-{id:"fin-devis",label:"Devis commercial",icon:"💶",legal:"Art. L.441-9 C.com. — Mentions obligatoires",
+{cat:"Finance & Comptabilité",catIcon:"fin",docs:[
+{id:"fin-devis",label:"Devis commercial",icon:"calc",legal:"Art. L.441-9 C.com. — Mentions obligatoires",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"ref",l:"Référence devis",ph:"Ex : DEV-2026-042"},{id:"validite",l:"Validité",ph:"Ex : 30 jours"},{id:"prest",l:"Prestations et prix HT",ph:"Ex : Pack CM Instagram : 1 500,00 €\nCréation logo : 800,00 €",type:"textarea"},{id:"tva",l:"TVA",ph:"Ex : 20% / TVA non applicable art. 293B CGI"}],
  gen:v=>`DEVIS
 Conforme Art. L.441-9 du Code de commerce — Mentions obligatoires.
@@ -681,7 +761,7 @@ Reserve de propriete jusqu'au paiement integral.
 Pour accord : retourner signe avec "Bon pour accord et execution".
 ${v.pre}  |  Date : ___________  |  Signature + cachet :`},
 
-{id:"fin-facture",label:"Facture",icon:"🧾",legal:"Art. L.441-9 C.com. — 22 mentions obligatoires",
+{id:"fin-facture",label:"Facture",icon:"receipt",legal:"Art. L.441-9 C.com. — 22 mentions obligatoires",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB SAS"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"tva_n",l:"N° TVA intracommunautaire",ph:"Ex : FR12123456789"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"cli",l:"Client (raison sociale + adresse)",ph:"Ex : Elara SARL, 5 rue du Commerce 69001 Lyon"},{id:"siret_c",l:"SIRET client",ph:"Ex : 987 654 321 00014"},{id:"ref",l:"N° facture",ph:"Ex : FAC-2026-042"},{id:"devis",l:"Réf. devis / BC",ph:"Ex : DEV-2026-038"},{id:"prest",l:"Détail prestations",ph:"Ex : Community management mai 2026 : 1 500,00 € HT",type:"textarea"},{id:"tva",l:"TVA",ph:"Ex : 20% / TVA non applicable art. 293B CGI"},{id:"ech",l:"Échéance",ph:"Ex : 30 jours date de facture"}],
  gen:v=>`FACTURE
 Mentions obligatoires — Art. L.441-9 du Code de commerce.
@@ -713,7 +793,7 @@ ${v.tva.includes("293")?"TVA non applicable, article 293 B du CGI.":""}
 
 Merci. ${v.pre}`},
 
-{id:"fin-relance",label:"Relance impayé",icon:"📨",legal:"Art. L.441-10 — Intérêts automatiques sans rappel",
+{id:"fin-relance",label:"Relance impayé",icon:"bell",legal:"Art. L.441-10 — Intérêts automatiques sans rappel",
  fields:[{id:"exp",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"fact",l:"Réf. et montant facture",ph:"Ex : FAC-2026-042 — 1 800,00 € TTC"},{id:"ech",l:"Échéance dépassée",ph:"Ex : 15 mai 2026"},{id:"retard",l:"Jours de retard",ph:"Ex : 15 jours"},{id:"niv",l:"Niveau de relance",ph:"Ex : 1ère relance amiable"}],
  gen:v=>`${v.exp} — Le ${window.TODAY}
 ${v.niv.toUpperCase()}
@@ -735,7 +815,7 @@ A defaut de reponse : recouvrement judiciaire aux frais du debiteur.
 
 [Nom, Signature] | ${v.exp}`},
 
-{id:"fin-budget",label:"Budget prévisionnel",icon:"📊",legal:"Outil de gestion interne — Base Plan de financement",
+{id:"fin-budget",label:"Budget prévisionnel",icon:"chart",legal:"Outil de gestion interne — Base Plan de financement",
  fields:[{id:"ent",l:"Entreprise / projet",ph:"Ex : CRÉALAB — Exercice 2026"},{id:"periode",l:"Période",ph:"Ex : 01/01/2026 — 31/12/2026"},{id:"activite",l:"Activité",ph:"Ex : Agence communication digitale"}],
  gen:v=>`BUDGET PREVISIONNEL
 ${v.ent} | Periode : ${v.periode} | Etabli le : ${window.TODAY}
@@ -774,8 +854,8 @@ Decaissements : _________ € | SOLDE FIN : _________ €
 Document etabli le ${window.TODAY} — ${v.ent}`}
 ]},
 
-{cat:"Ventes & Marketing",catIcon:"📈",docs:[
-{id:"mk-brief",label:"Brief marketing",icon:"📢",legal:"Conforme ARPP — Pratiques loyales L.121-1 C.conso.",
+{cat:"Ventes & Marketing",catIcon:"mk",docs:[
+{id:"mk-brief",label:"Brief marketing",icon:"offre",legal:"Conforme ARPP — Pratiques loyales L.121-1 C.conso.",
  fields:[{id:"ent",l:"Marque / entreprise",ph:"Ex : CRÉALAB"},{id:"prod",l:"Produit / service",ph:"Ex : Transferts DTF"},{id:"obj",l:"Objectif SMART",ph:"Ex : +30% ventes en 3 mois Instagram"},{id:"cible",l:"Cible / persona",ph:"Ex : Femmes 25-45 ans, créatrices"},{id:"bud",l:"Budget",ph:"Ex : 500 € / mois"},{id:"can",l:"Canaux",ph:"Ex : Instagram, email, Pinterest"}],
  gen:v=>`BRIEF MARKETING
 ${v.ent} | ${window.TODAY}
@@ -805,7 +885,7 @@ Repartition : 50% creation | 30% media paye | 20% outils/tracking
 - Images : droits verifies, pas de contrefacon
 - Mentions obligatoires si offre promotionnelle (L.121-1 C.conso.)`},
 
-{id:"mk-propcom",label:"Proposition commerciale",icon:"📋",legal:"Conforme pratiques commerciales loyales L.121-1",
+{id:"mk-propcom",label:"Proposition commerciale",icon:"list",legal:"Conforme pratiques commerciales loyales L.121-1",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara Mode"},{id:"besoin",l:"Besoin identifié",ph:"Ex : Refonte présence Instagram"},{id:"offre",l:"Votre offre",ph:"Ex : Pack Community Management 3 mois"},{id:"tarif",l:"Tarif",ph:"Ex : 1 500 € HT / mois"},{id:"valeur",l:"Valeur ajoutée",ph:"Ex : Expertise DTF + reporting hebdo"}],
  gen:v=>`PROPOSITION COMMERCIALE
 ${v.pre} → ${v.cli} | Ref. PROP-${new Date().getFullYear()}-XXX | ${window.TODAY}
@@ -831,8 +911,8 @@ du devis ou contrat correspondant. Pratiques loyales L.121-1 C.conso.]
 ${v.pre} — [Nom, Fonction] — ${window.TODAY}`}
 ]},
 
-{cat:"Gestion & Management",catIcon:"📊",docs:[
-{id:"gest-cr",label:"Compte-rendu de réunion",icon:"📝",legal:"Document interne — Valeur probatoire si signé",
+{cat:"Gestion & Management",catIcon:"gest",docs:[
+{id:"gest-cr",label:"Compte-rendu de réunion",icon:"edit",legal:"Document interne — Valeur probatoire si signé",
  fields:[{id:"sujet",l:"Sujet / ODJ",ph:"Ex : Revue mensuelle — Juin 2026"},{id:"lieu",l:"Lieu / format",ph:"Ex : Salle A / Teams"},{id:"part",l:"Participants (nom + fonction)",ph:"Ex : Marie D. (DG), Tom L. (Sales)"},{id:"pts",l:"Points abordés",ph:"Ex : Résultats mai, retards, plan Q3...",type:"textarea"},{id:"dec",l:"Décisions et actions",ph:"Ex : Lancer AO avant 20/06, resp. Tom...",type:"textarea"},{id:"red",l:"Rédacteur",ph:"Ex : Julie Oudin, Ops"}],
  gen:v=>`COMPTE-RENDU DE REUNION
 Sujet : ${v.sujet} | Date : ${window.TODAY} | Lieu : ${v.lieu}
@@ -859,7 +939,7 @@ N° | ACTION           | RESPONSABLE | ECHEANCE
 5. PROCHAINE REUNION : [Date a fixer]
 Redige le ${window.TODAY} par ${v.red}`},
 
-{id:"gest-rapport",label:"Rapport d'activité mensuel",icon:"📈",legal:"Document de gestion interne — Confidentiel",
+{id:"gest-rapport",label:"Rapport d'activité mensuel",icon:"trend",legal:"Document de gestion interne — Confidentiel",
  fields:[{id:"org",l:"Organisation",ph:"Ex : BriefMaker Pro"},{id:"per",l:"Période",ph:"Ex : Mai 2026"},{id:"resp",l:"Responsable",ph:"Ex : Céline Martin, Dirigeante"},{id:"rea",l:"Réalisations",ph:"Ex : Lancement v5, 50 nouveaux utilisateurs...",type:"textarea"},{id:"chf",l:"Chiffres clés",ph:"Ex : CA:1200€, Users:+50, Conv:4%"},{id:"dif",l:"Points d'alerte",ph:"Ex : Retard Stripe, bug mobile"},{id:"nxt",l:"Objectifs mois suivant",ph:"Ex : Newsletter, 100 clients"}],
  gen:v=>`RAPPORT D'ACTIVITE MENSUEL — ${v.per.toUpperCase()}
 ${v.org} | Redacteur : ${v.resp} | Date : ${window.TODAY}
@@ -880,83 +960,61 @@ ${v.nxt.split(",").map((o,i)=>`${i+1}. ${o.trim()}`).join("\n")}
 Rapport etabli le ${window.TODAY} — ${v.org}`}
 ]},
 
-{cat:"Lettres professionnelles",catIcon:"✉️",docs:[
-{id:"lp-motivation",label:"Lettre de motivation",icon:"📬",legal:"RGPD — Données candidat protégées",
- fields:[{id:"candidat",l:"Votre nom",ph:"Ex : Marie Dupont"},{id:"poste",l:"Poste visé",ph:"Ex : Chargée communication digitale"},{id:"ent",l:"Entreprise visée",ph:"Ex : CRÉALAB"},{id:"accroche",l:"Accroche",ph:"Ex : Votre expertise en DTF et mon parcours..."},{id:"exp",l:"Expériences pertinentes",ph:"Ex : 3 ans chez X, +50k abonnés gérés..."},{id:"valeur",l:"Valeur apportée",ph:"Ex : Vision stratégique + réseau + créativité"}],
- gen:v=>`${v.candidat} | [Adresse] | [Tel] | [Email] | [LinkedIn]
-Le ${window.TODAY}
+{cat:"Lettres professionnelles",catIcon:"lettre",docs:[
+{id:"lp-motivation",label:"Lettre de motivation",icon:"mail",legal:"RGPD — Données candidat protégées",pdfType:"lettre",
+ fields:[
+   {id:"candidat",l:"Votre nom complet",ph:"Ex : Marie Dupont"},
+   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},
+   {id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — marie@email.fr"},
+   {id:"ent",l:"Entreprise visée",ph:"Ex : CRÉALAB"},
+   {id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
+   {id:"poste",l:"Poste visé",ph:"Ex : Chargée communication digitale"},
+   {id:"objet",l:"Objet",ph:"Ex : Candidature au poste de Chargée communication"},
+   {id:"corps",l:"Corps de la lettre",ph:"Madame, Monsieur,\n\nC'est avec un vif intérêt que je vous adresse ma candidature...\n\nMon parcours de X années en communication m'a permis de...\n\nJe me tiens disponible pour un entretien.\n\nCordialement,",type:"textarea"}
+ ],
+ gen:v=>`Madame / Monsieur,
 
-Service Recrutement — ${v.ent}
+${v.corps}
 
-OBJET : Candidature — ${v.poste}
+${v.candidat}
+PJ : Curriculum Vitae`,},
 
-Madame / Monsieur,
+{id:"lp-demission",label:"Lettre de démission",icon:"door",legal:"Art. L.1237-1 — Préavis selon convention collective",pdfType:"lettre",
+ fields:[
+   {id:"salarie",l:"Votre nom complet",ph:"Ex : Jean Dupont"},
+   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 69001 Lyon"},
+   {id:"poste",l:"Votre poste",ph:"Ex : Responsable commercial"},
+   {id:"manager",l:"Destinataire (nom + qualité)",ph:"Ex : Mme Sophie Martin, DRH"},
+   {id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},
+   {id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
+   {id:"objet",l:"Objet",ph:"Ex : Démission — Poste de Responsable commercial"},
+   {id:"preavis",l:"Durée du préavis",ph:"Ex : 1 mois (convention Syntec)"},
+   {id:"depart",l:"Date de départ estimée",ph:"Ex : 30 juin 2026"},
+   {id:"corps",l:"Corps de la lettre (personnalisez librement)",ph:"Par la présente, je vous notifie ma décision de démissionner de mes fonctions de [poste] au sein de [entreprise], à compter de ce jour.\n\nConformément à l'article L.1237-1 du Code du travail, je respecterai mon préavis de [durée], soit jusqu'au [date de départ].\n\nJe m'engage à assurer la transmission de mes dossiers en cours et à accompagner mon successeur durant cette période.\n\nJe vous remercie pour ces années au sein de [entreprise] et vous adresse mes sincères salutations professionnelles.",type:"textarea"}
+ ],
+ gen:v=>`${v.corps}
 
-${v.accroche}
+${v.salarie}
 
-Je vous adresse ma candidature pour le poste de ${v.poste} au sein de ${v.ent}.
+Note légale : L'employeur doit remettre à l'échéance :
+- Certificat de travail (art. L.1234-19 C.trav.)
+- Attestation France Travail (art. R.1234-9 C.trav.)
+- Solde de tout compte (art. L.1234-20 C.trav.)`,},
 
-MON PARCOURS :
+{id:"lp-reclamation",label:"Lettre de réclamation",icon:"alert",legal:"Art. L.217-1 garantie légale — Médiation L.612-1",pdfType:"lettre",
+ fields:[
+   {id:"exp",l:"Votre nom / entreprise",ph:"Ex : Marie Dupont / CRÉALAB SAS"},
+   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},
+   {id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — contact@crealab.fr"},
+   {id:"dest",l:"Destinataire (service + entreprise)",ph:"Ex : Service client — XYZ SARL"},
+   {id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 10 avenue de la Gare, 69002 Lyon"},
+   {id:"objet",l:"Objet de la réclamation",ph:"Ex : Réclamation — Commande n°12345 du 01/05/2026"},
+   {id:"corps",l:"Corps de la lettre (décrivez librement les faits et votre demande)",ph:"J'ai commandé [produit/service] le [date] (référence commande n°XXX).\n\nMalgré [délai], je constate les problèmes suivants :\n- [Problème 1]\n- [Problème 2]\n\nEn application de la garantie légale de conformité (art. L.217-1 et suivants du Code de la consommation), je vous demande [remboursement / remplacement / réparation] dans un délai de 30 jours.\n\nSans réponse satisfaisante, je me réserve le droit de saisir le médiateur de la consommation compétent (art. L.612-1 C.conso.).\n\nVeuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées.",type:"textarea"}
+ ],
+ gen:v=>`${v.corps}
+
 ${v.exp}
-
-CE QUE J'APPORTE A ${v.ent.toUpperCase()} :
-${v.valeur}
-
-Convaincu(e) que mon profil correspond a vos attentes, je serais
-ravi(e) de vous rencontrer pour echanger sur ma motivation.
-
-Cordialement,
-${v.candidat} | [Signature]
-PJ : Curriculum Vitae`},
-
-{id:"lp-demission",label:"Lettre de démission",icon:"🚪",legal:"Art. L.1237-1 — Préavis selon convention collective",
- fields:[{id:"salarie",l:"Votre nom",ph:"Ex : Jean Dupont"},{id:"poste",l:"Votre poste",ph:"Ex : Commercial"},{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"manager",l:"Destinataire",ph:"Ex : Mme Sophie Martin, DRH"},{id:"preavis",l:"Durée du préavis",ph:"Ex : 1 mois (convention Syntec)"},{id:"depart",l:"Date de départ estimée",ph:"Ex : 30 juin 2026"}],
- gen:v=>`${v.salarie} — ${v.poste} — Le ${window.TODAY}
-[Remise en main propre contre decharge OU LRAR]
-[IMPORTANT : le preavis court a compter de la reception — Cass. soc.]
-
-A : ${v.manager} — ${v.ent}
-
-OBJET : Lettre de demission (art. L.1237-1 C.trav.)
-
-Par la presente, je notifie ma demission de mes fonctions de ${v.poste}
-au sein de ${v.ent}. Decision prise librement et de maniere irrevocable.
-
-PREAVIS : ${v.preavis} | Depart estime : ${v.depart}
-
-Je m'engage a assurer la transmission de mes dossiers et la formation
-de mon successeur durant la periode de preavis.
-
-[Note : L'employeur doit remettre a l'echeance :
-- Certificat de travail (L.1234-19)
-- Attestation France Travail (R.1234-9)
-- Solde de tout compte (L.1234-20)]
-
-Cordialement, ${v.salarie} | [Signature]`},
-
-{id:"lp-reclamation",label:"Lettre de réclamation",icon:"📣",legal:"Art. L.217-1 garantie légale — Médiation L.612-1",
- fields:[{id:"exp",l:"Votre nom / entreprise",ph:"Ex : Marie Dupont / CRÉALAB"},{id:"dest",l:"Destinataire",ph:"Ex : Service client XYZ"},{id:"objet",l:"Objet",ph:"Ex : Produit défectueux — Commande n°12345"},{id:"faits",l:"Faits",ph:"Ex : Produit livré le 10/05 avec défaut...",type:"textarea"},{id:"dem",l:"Solution demandée",ph:"Ex : Remboursement intégral"}],
- gen:v=>`${v.exp} — Le ${window.TODAY}
-LETTRE RECOMMANDEE AVEC ACCUSE DE RECEPTION
-
-A : ${v.dest}
-OBJET : RECLAMATION — ${v.objet}
-
-FAITS :
-${v.faits}
-
-FONDEMENT LEGAL :
-- Garantie legale de conformite (L.217-1 et suivants C.conso.) : 2 ans
-- Garantie vices caches (art. 1641 C.civ.)
-- Non-conformite au contrat (L.217-4 C.conso.)
-
-DEMANDE : ${v.dem}
-
-Reponse souhaitee sous 30 jours (recommandation DGCCRF).
-A defaut : mediation consommateur (L.612-1 C.conso.) puis CPH/tribunal.
-
-${v.exp} | [Signature]
-PJ : [Facture, photos, correspondances]`}
+PJ : [Facture — Photos — Correspondances antérieures]`}
 ]}
 ];
 
@@ -974,7 +1032,7 @@ function buildCatsGrid(){
     const c=document.createElement("div");
     c.className="cat-card";
     c.onclick=()=>{openCats.add(ci);showApp(ci);};
-    c.innerHTML=`<span class="cc-icon">${cat.catIcon}</span><div class="cc-name">${cat.cat}</div><div class="cc-count">${cat.docs.length} modèles</div><span class="cc-arrow">Accéder →</span>`;
+    c.innerHTML=`<div class="cc-icon">${ico(cat.catIcon)}</div><div class="cc-name">${cat.cat}</div><div class="cc-count">${cat.docs.length} modèles</div><span class="cc-arrow">Accéder →</span>`;
     g.appendChild(c);
   });
 }
@@ -993,7 +1051,7 @@ function buildSidebar(filter=""){
     const isOpen=openCats.has(ci);
     const tog=document.createElement("div");
     tog.className="cat-toggle"+(isOpen?" open":"");
-    tog.innerHTML=`<div class="ctl"><span class="cti">${cat.catIcon}</span><span class="ctn">${cat.cat}</span></div><div class="ctr"><span class="ctc">${vis.length}</span><span class="cta">▼</span></div>`;
+    tog.innerHTML=`<div class="ctl"><span class="cti">${ico(cat.catIcon)}</span><span class="ctn">${cat.cat}</span></div><div class="ctr"><span class="ctc">${vis.length}</span><span class="cta">▼</span></div>`;
     tog.onclick=()=>{openCats.has(ci)?openCats.delete(ci):openCats.add(ci);buildSidebar(document.getElementById("searchInput")?.value||"");};
     list.appendChild(tog);
     const dd=document.createElement("div");
@@ -1002,7 +1060,7 @@ function buildSidebar(filter=""){
       const el=document.createElement("div");
       el.className="doc-item"+(cur&&cur.id===doc.id?" active":"");
       el.onclick=(e)=>{e.stopPropagation();selectDoc(doc.id);};
-      el.innerHTML=`<span class="di">${doc.icon}</span><span class="dl">${doc.label}</span>`;
+      el.innerHTML=`<span class="di">${ico(doc.icon)}</span><span class="dl">${doc.label}</span>`;
       dd.appendChild(el);
     });
     list.appendChild(dd);
@@ -1022,22 +1080,22 @@ function renderPanel(){
   const p=document.getElementById("mainPanel");
   if(!p)return;
   p.innerHTML=`
-    <div class="breadcrumb">${cur.catIcon} ${cur.catLabel} › <b>${cur.label}</b></div>
-    <div class="legal-tag">⚖️ ${cur.legal}</div>
+    <div class="breadcrumb">${ico(cur.catIcon)}&nbsp;${cur.catLabel} › <b>${cur.label}</b></div>
+    <div class="legal-tag">⚖ ${cur.legal}</div>
     <div class="form-card">
       <div class="form-head">
-        <span class="fh-icon">${cur.icon}</span>
+        <span class="fh-icon">${ico(cur.icon)}</span>
         <h2>${cur.label}</h2>
         <span class="fh-badge">${cur.catLabel}</span>
       </div>
       <div class="form-body">
-        ${cur.fields.map(f=>`<div class="field ${f.type==='textarea'?'field-full':''}"><label>${f.l}</label>${f.type==='textarea'?`<textarea id="f_${f.id}" placeholder="${f.ph}"></textarea>`:`<input type="text" id="f_${f.id}" placeholder="${f.ph}"/>`}</div>`).join("")}
+        ${cur.fields.map(f=>`<div class="field ${f.type==='textarea'?'field-full':''}"><label>${f.l}</label>${f.type==='textarea'?`<textarea id="f_${f.id}" class="${f.id==='corps'?'corps-lettre':''}" placeholder="${f.ph}"></textarea>`:`<input type="text" id="f_${f.id}" placeholder="${f.ph}"/>`}</div>`).join("")}
       </div>
       <div class="err-msg" id="errMsg">⚠ Merci de remplir tous les champs.</div>
     </div>
     <div class="legal-note">⚠ Ce modèle est indicatif. Pour tout acte juridique engageant, consultez un avocat, notaire ou expert-comptable.</div>
     <div class="actions">
-      <button class="btn-gen" onclick="generate()">✦ Générer le document</button>
+      <button class="btn-gen" onclick="generate()">Générer le document</button>
       <button class="btn-pdf" id="pdfBtn" onclick="exportPDF()" disabled>↓ PDF</button>
     </div>
     <div class="result-card" id="resultCard">
@@ -1054,6 +1112,7 @@ function generate(){
   const err=document.getElementById("errMsg");
   if(empty){err.style.display="block";return;}
   err.style.display="none";
+  cur._lastVals=v;  // mémoriser pour la mise en forme PDF lettre
   lastDoc=cur.gen(v);
   document.getElementById("resultLabel").textContent=cur.label+" — généré ✓";
   document.getElementById("resultBody").textContent=lastDoc;
@@ -1072,24 +1131,193 @@ function copyDoc(){
   });
 }
 
+// ── EXPORT PDF — MISE EN FORME FRANÇAISE ─────────────────────
+// Norme : émetteur haut gauche → destinataire en retrait droite
+// → Lieu, date → Objet → corps du document
 function exportPDF(){
   if(!lastDoc||!window.jspdf)return;
   const{jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
-  const M=18,W=210-M*2;
-  doc.setFont("helvetica","bold");doc.setFontSize(13);
-  doc.setTextColor(27,79,138);doc.text(cur.label,M,22);
-  doc.setFont("helvetica","normal");doc.setFontSize(7.5);
-  doc.setTextColor(100,100,100);
-  doc.text("BriefMaker Pro · "+cur.catLabel+" · "+window.TODAY,M,29);
-  doc.text("Ref. legale : "+cur.legal,M,34);
-  doc.setDrawColor(27,79,138);doc.line(M,37,210-M,37);
-  doc.setFontSize(9.5);doc.setTextColor(30,30,30);
-  const lines=doc.splitTextToSize(lastDoc,W);
-  let y=44;
-  lines.forEach(ln=>{if(y>278){doc.addPage();y=18;}doc.text(ln,M,y);y+=5.2;});
-  doc.setFontSize(7);doc.setTextColor(160,160,160);
-  doc.text("BriefMaker Pro — briefmaker-pro.vercel.app · Document indicatif · Consulter un professionnel du droit.",M,291);
+
+  // Marges et colonnes
+  const ML=20;          // marge gauche
+  const MR=20;          // marge droite
+  const MW=210-ML-MR;   // largeur utile
+  const RCOL=115;       // colonne destinataire (retrait droite)
+  const RCOL_W=75;      // largeur bloc destinataire
+  let y=20;             // curseur vertical
+
+  // ── Helpers ─────────────────────────────────────────────────
+  function setFont(style,size,color){
+    doc.setFont("helvetica",style||"normal");
+    doc.setFontSize(size||10);
+    if(color)doc.setTextColor(...color);
+    else doc.setTextColor(20,20,20);
+  }
+  function addText(txt,x,width,style,size,color){
+    setFont(style,size,color);
+    const lines=doc.splitTextToSize(txt,width||MW);
+    lines.forEach(ln=>{
+      if(y>282){doc.addPage();y=20;}
+      doc.text(ln,x||ML,y);
+      y+=doc.getLineHeight()/doc.internal.scaleFactor*1.1;
+    });
+  }
+  function skip(mm){y+=mm||5;}
+
+  // ── Détection type de document ───────────────────────────────
+  // Les lettres ont un bloc émetteur/destinataire structuré
+  const isLettre=cur.pdfType==="lettre"||
+    ["lp-motivation","lp-demission","lp-reclamation",
+     "rh-avertissement","rh-mise-en-demeure","jur-mise-en-demeure"].includes(cur.id);
+
+  // Valeurs extraites du document généré pour les lettres
+  const vals=cur._lastVals||{};
+
+  if(isLettre){
+    // ══ MISE EN FORME LETTRE FRANÇAISE ══════════════════════
+
+    // ÉMETTEUR — haut gauche
+    setFont("bold",10,[27,79,138]);
+    const emetteur=vals.exp||vals.salarie||vals.candidat||"[Émetteur]";
+    const emLines=doc.splitTextToSize(emetteur,85);
+    emLines.forEach(ln=>{doc.text(ln,ML,y);y+=5;});
+    setFont("normal",9,[80,80,80]);
+    doc.text("[Adresse — Code postal Ville]",ML,y);y+=4.5;
+    doc.text("[Téléphone — Email]",ML,y);
+
+    // DESTINATAIRE — même hauteur de départ, décalé à droite de 2 cm
+    let dy=20; // repart du même y de départ
+    setFont("bold",10,[20,20,20]);
+    const dest=vals.dest||vals.manager||vals.ent||"[Destinataire]";
+    const dLines=doc.splitTextToSize(dest,RCOL_W);
+    dLines.forEach(ln=>{doc.text(ln,RCOL,dy);dy+=5;});
+    setFont("normal",9,[80,80,80]);
+    doc.text("[Adresse destinataire]",RCOL,dy);dy+=4.5;
+    doc.text("[Code postal Ville]",RCOL,dy);
+
+    // On descend sous le plus bas des deux blocs
+    y=Math.max(y,dy)+12;
+
+    // LIEU ET DATE — aligné à droite
+    setFont("normal",10);
+    const lieuDate="[Ville], le "+window.TODAY;
+    const ldW=doc.getTextWidth(lieuDate);
+    doc.text(lieuDate,210-MR-ldW,y);
+    y+=10;
+
+    // OBJET
+    const objet=vals.objet||cur.label;
+    setFont("bold",10);
+    doc.text("Objet : "+objet,ML,y);
+    y+=3;
+    doc.setDrawColor(27,79,138);
+    doc.setLineWidth(0.3);
+    doc.line(ML,y,ML+doc.getTextWidth("Objet : "+objet),y);
+    y+=8;
+
+    // MODE D'ENVOI si applicable
+    if(vals.mode_envoi||lastDoc.includes("RECOMMANDEE")){
+      setFont("italic",8,[120,80,0]);
+      doc.text("Lettre recommandée avec accusé de réception",ML,y);
+      y+=8;
+    }
+
+    // CORPS DU DOCUMENT
+    setFont("normal",10);
+    // On extrait le corps en sautant les lignes d'en-tête déjà mises en forme
+    let corps=lastDoc;
+    // Supprimer les lignes d'en-tête du texte brut (émetteur, destinataire, objet déjà mis)
+    const lignes=corps.split("\n");
+    let debut=0;
+    for(let i=0;i<Math.min(lignes.length,12);i++){
+      if(lignes[i].toUpperCase().includes("MADAME")||
+         lignes[i].toUpperCase().includes("MONSIEUR")||
+         lignes[i].toUpperCase().includes("PAR LA PRESENTE")||
+         lignes[i].toUpperCase().includes("SUITE A")||
+         lignes[i].toUpperCase().includes("JE VOUS")||
+         lignes[i].toUpperCase().includes("NOUS VOUS")||
+         lignes[i].toUpperCase().includes("SAUF ERREUR")||
+         lignes[i].toUpperCase().includes("FAITS :")){
+        debut=i; break;
+      }
+    }
+    corps=lignes.slice(debut).join("\n").trim();
+    addText(corps,ML,MW,"normal",10);
+
+  } else {
+    // ══ MISE EN FORME DOCUMENT ADMINISTRATIF/CONTRAT ════════
+
+    // EN-TÊTE COLORÉ
+    doc.setFillColor(27,79,138);
+    doc.rect(0,0,210,14,"F");
+    setFont("bold",11,[255,255,255]);
+    doc.text("BriefMaker Pro",ML,9);
+    setFont("normal",8,[200,220,255]);
+    doc.text(cur.catLabel+" · Conforme droit français 2025/2026",ML+42,9);
+    y=22;
+
+    // TITRE DU DOCUMENT
+    setFont("bold",14,[27,79,138]);
+    addText(cur.label,ML,MW,"bold",14,[27,79,138]);
+    skip(1);
+
+    // RÉFÉRENCE LÉGALE
+    setFont("normal",8,[30,107,58]);
+    doc.setFillColor(232,245,238);
+    const refH=6;
+    doc.roundedRect(ML,y-4,MW,refH,2,2,"F");
+    doc.text("⚖  "+cur.legal,ML+3,y);
+    y+=refH+2;
+
+    // SÉPARATEUR
+    doc.setDrawColor(27,79,138);
+    doc.setLineWidth(0.4);
+    doc.line(ML,y,210-MR,y);
+    y+=6;
+
+    // CORPS DU DOCUMENT
+    setFont("normal",9.5);
+    const bodyLines=lastDoc.split("\n");
+    bodyLines.forEach(ln=>{
+      if(y>282){doc.addPage();y=20;}
+      // Ligne de séparateur (tirets)
+      if(/^-{5,}/.test(ln.trim())){
+        doc.setDrawColor(220,215,200);
+        doc.setLineWidth(0.2);
+        doc.line(ML,y-1,210-MR,y-1);
+        y+=3; return;
+      }
+      // Titres d'articles (ART. / ARTICLE)
+      if(/^(ART\.|ARTICLE|ENTRE|ENTRE\s*:)/i.test(ln.trim())){
+        setFont("bold",9.5,[27,79,138]);
+        const wrapped=doc.splitTextToSize(ln,MW);
+        wrapped.forEach(l=>{doc.text(l,ML,y);y+=5;});
+        setFont("normal",9.5,[20,20,20]);
+        return;
+      }
+      // Ligne vide
+      if(!ln.trim()){y+=3;return;}
+      // Ligne normale
+      const wrapped=doc.splitTextToSize(ln,MW);
+      wrapped.forEach(l=>{
+        if(y>282){doc.addPage();y=20;}
+        doc.text(l,ML,y);y+=5;
+      });
+    });
+  }
+
+  // PIED DE PAGE
+  const totalPages=doc.internal.getNumberOfPages();
+  for(let i=1;i<=totalPages;i++){
+    doc.setPage(i);
+    doc.setDrawColor(200,200,200);doc.setLineWidth(0.2);
+    doc.line(ML,288,210-MR,288);
+    setFont("normal",7,[160,160,160]);
+    doc.text("BriefMaker Pro · briefmaker-pro.vercel.app · Document indicatif — consulter un professionnel du droit",ML,292);
+    doc.text("Page "+i+"/"+totalPages,210-MR,292,{align:"right"});
+  }
+
   doc.save(cur.id+"-"+window.TODAY.replace(/\//g,"-")+".pdf");
 }
 
