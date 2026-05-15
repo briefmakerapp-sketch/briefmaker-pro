@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -140,6 +141,28 @@ nav{background:var(--blue);padding:0 2rem;display:flex;align-items:center;justif
 .btn-pdf{padding:9px 13px;border:1px solid var(--brd);border-radius:var(--r);background:var(--wh);color:var(--ink-s);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .15s}
 .btn-pdf:hover{background:var(--surf2)}
 .btn-pdf:disabled{opacity:.4;cursor:not-allowed}
+/* ── BOUTON EXCEL ── */
+.btn-xlsx{padding:9px 13px;border:1px solid #1A6B3A;border-radius:var(--r);background:var(--grn-l);color:var(--grn);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:none;align-items:center;gap:5px;font-weight:500;transition:background .15s}
+.btn-xlsx:hover{background:#C8E6D4}
+.btn-xlsx svg{width:14px;height:14px;stroke:var(--grn);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn-xlsx .pro-badge{font-size:9px;background:var(--gold);color:#fff;padding:1px 5px;border-radius:10px;font-weight:700;letter-spacing:.04em}
+/* ── MODALE PRO ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:2rem;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;position:relative}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:18px;color:var(--mut);cursor:pointer;line-height:1}
+.modal-icon{width:56px;height:56px;background:var(--gold-bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.modal-icon svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.modal-box h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);margin-bottom:.5rem}
+.modal-box p{font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:1.25rem}
+.modal-perks{background:var(--surf2);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.25rem;text-align:left}
+.modal-perks li{font-size:12px;color:var(--ink-s);margin-bottom:.35rem;display:flex;align-items:center;gap:6px;list-style:none}
+.modal-perks li svg{width:13px;height:13px;stroke:var(--grn);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.modal-price{font-family:'DM Serif Display',serif;font-size:26px;color:var(--blue);margin-bottom:.25rem}
+.modal-price span{font-size:13px;font-family:'DM Sans',sans-serif;color:var(--mut)}
+.btn-modal-cta{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:.6rem;transition:background .15s}
+.btn-modal-cta:hover{background:var(--blue-d)}
+.btn-modal-skip{width:100%;padding:8px;background:transparent;color:var(--mut);border:none;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer}
 .result-card{background:var(--wh);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden;display:none}
 .result-head{padding:.65rem 1rem;background:var(--surf2);border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center}
 .result-head h3{font-size:12px;font-weight:500;color:var(--blue);display:flex;align-items:center;gap:5px}
@@ -173,6 +196,93 @@ footer strong{color:var(--blue)}
 .fh-icon{display:flex;align-items:center}
 .fh-icon .ico{width:30px;height:30px;background:var(--blue-l);border-radius:7px}
 .fh-icon .ico svg{width:16px;height:16px;stroke:var(--blue);fill:none;stroke-width:1.6}
+/* ── PAGE TARIFS ─────────────────────────────────────────── */
+#pricingPage{display:none}
+.pricing-hero{background:var(--blue);padding:3.5rem 2rem 2.5rem;text-align:center}
+.pricing-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(24px,4vw,40px);color:#fff;margin-bottom:.6rem}
+.pricing-hero p{font-size:14px;color:rgba(255,255,255,.75);max-width:480px;margin:0 auto}
+.pricing-toggle{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-top:1.5rem}
+.toggle-label{font-size:12px;color:rgba(255,255,255,.75)}
+.toggle-label.active{color:#F0D080;font-weight:600}
+.toggle-pill{width:44px;height:24px;background:rgba(255,255,255,.2);border-radius:12px;cursor:pointer;position:relative;border:none;transition:background .2s}
+.toggle-pill.annual{background:#F0D080}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .2s}
+.toggle-pill.annual .toggle-thumb{left:23px}
+.badge-annual{background:#F0D080;color:var(--ink);font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px}
+.pricing-section{padding:3rem 2rem;max-width:1060px;margin:0 auto}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:3rem}
+@media(max-width:780px){.plans-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}}
+/* Carte plan */
+.plan-card{background:var(--wh);border:1.5px solid var(--brd);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s}
+.plan-card:hover{box-shadow:0 8px 28px rgba(27,79,138,.1)}
+.plan-card.popular{border-color:var(--blue);box-shadow:0 0 0 3px rgba(27,79,138,.1)}
+.plan-card.popular .plan-header{background:var(--blue)}
+.plan-card.popular .plan-name{color:#fff}
+.plan-card.popular .plan-tagline{color:rgba(255,255,255,.75)}
+.plan-card.business .plan-header{background:var(--ink)}
+.plan-card.business .plan-name{color:#fff}
+.plan-card.business .plan-tagline{color:rgba(255,255,255,.6)}
+.plan-header{padding:1.5rem 1.5rem 1.25rem;background:var(--surf2);position:relative}
+.popular-badge{position:absolute;top:12px;right:12px;background:#F0D080;color:var(--ink);font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em}
+.plan-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.plan-icon svg{width:20px;height:20px;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.plan-card:not(.popular):not(.business) .plan-icon{background:var(--blue-l)}
+.plan-card:not(.popular):not(.business) .plan-icon svg{stroke:var(--blue);fill:none}
+.plan-card.popular .plan-icon{background:rgba(255,255,255,.15)}
+.plan-card.popular .plan-icon svg{stroke:#fff;fill:none}
+.plan-card.business .plan-icon{background:rgba(255,255,255,.1)}
+.plan-card.business .plan-icon svg{stroke:#F0D080;fill:none}
+.plan-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);margin-bottom:.2rem}
+.plan-tagline{font-size:11px;color:var(--mut)}
+.plan-price-box{padding:1.25rem 1.5rem;border-bottom:1px solid var(--brd)}
+.plan-price{font-family:'DM Serif Display',serif;font-size:36px;color:var(--ink);line-height:1}
+.plan-price sup{font-size:16px;font-family:'DM Sans',sans-serif;vertical-align:top;margin-top:6px;display:inline-block}
+.plan-price sub{font-size:12px;font-family:'DM Sans',sans-serif;color:var(--mut);font-weight:400}
+.plan-price-annual{font-size:10px;color:var(--mut);margin-top:.3rem}
+.plan-price-annual s{color:#bbb}
+.plan-body{padding:1.25rem 1.5rem;flex:1;display:flex;flex-direction:column}
+.plan-features{list-style:none;margin-bottom:1.25rem;flex:1}
+.plan-features li{font-size:12px;color:var(--ink-s);padding:.35rem 0;display:flex;align-items:flex-start;gap:8px;border-bottom:1px solid var(--surf2)}
+.plan-features li:last-child{border-bottom:none}
+.plan-features li svg{width:13px;height:13px;flex-shrink:0;margin-top:1px}
+.plan-features li.yes svg{stroke:var(--grn);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.plan-features li.no{color:var(--mut)}
+.plan-features li.no svg{stroke:#ccc;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.plan-features li strong{color:var(--ink);font-weight:600}
+.btn-plan{width:100%;padding:11px;border-radius:var(--r);font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;border:none}
+.btn-plan.free{background:var(--surf2);color:var(--ink-s);border:1px solid var(--brd)}
+.btn-plan.free:hover{background:var(--brd)}
+.btn-plan.pro{background:var(--blue);color:#fff}
+.btn-plan.pro:hover{background:var(--blue-d)}
+.btn-plan.biz{background:var(--ink);color:#fff}
+.btn-plan.biz:hover{background:#2A2420}
+/* FAQ */
+.faq-section{padding:2rem 2rem 3rem;max-width:700px;margin:0 auto}
+.faq-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);margin-bottom:1.5rem;text-align:center}
+.faq-item{border:1px solid var(--brd);border-radius:var(--r);margin-bottom:.65rem;overflow:hidden}
+.faq-q{padding:.85rem 1rem;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:var(--wh)}
+.faq-q:hover{background:var(--surf2)}
+.faq-chevron{font-size:12px;color:var(--mut);transition:transform .2s}
+.faq-item.open .faq-chevron{transform:rotate(180deg)}
+.faq-a{font-size:12px;color:var(--mut);line-height:1.65;padding:0 1rem;max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s}
+.faq-item.open .faq-a{max-height:200px;padding:.75rem 1rem}
+/* Comparaison */
+.compare-section{padding:0 2rem 3rem;max-width:1060px;margin:0 auto}
+.compare-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);margin-bottom:1.5rem;text-align:center}
+.compare-table{width:100%;border-collapse:collapse;font-size:12px}
+.compare-table th{background:var(--surf2);padding:.75rem 1rem;text-align:center;font-weight:600;color:var(--ink-s);border:1px solid var(--brd)}
+.compare-table th:first-child{text-align:left}
+.compare-table th.col-pop{background:var(--blue);color:#fff}
+.compare-table td{padding:.65rem 1rem;border:1px solid var(--brd);text-align:center;color:var(--ink-s)}
+.compare-table td:first-child{text-align:left;font-weight:500;color:var(--ink);background:var(--surf)}
+.compare-table tr:nth-child(even) td:not(:first-child){background:var(--surf)}
+.compare-table td.col-pop{background:var(--blue-l);font-weight:600;color:var(--blue)}
+.check-yes{color:var(--grn);font-weight:700}
+.check-no{color:#ccc}
+/* Garantie */
+.guarantee{background:var(--surf2);border-top:1px solid var(--brd);padding:2rem;text-align:center}
+.guarantee p{font-size:12px;color:var(--mut);max-width:500px;margin:.5rem auto 0}
+.guarantee strong{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -182,7 +292,7 @@ footer strong{color:var(--blue)}
   <div class="nav-links">
     <span class="nav-link" onclick="showLanding()">Accueil</span>
     <span class="nav-link" onclick="showApp()">Documents</span>
-    <span class="nav-link">Tarifs</span>
+    <span class="nav-link" onclick="showPricing()">Tarifs</span>
   </div>
   <div class="nav-r">
     <div class="nav-time">
@@ -288,6 +398,212 @@ footer strong{color:var(--blue)}
   </div>
 </div>
 
+<!-- PAGE TARIFS -->
+<div id="pricingPage">
+
+  <div class="pricing-hero">
+    <div class="hero-badge" style="background:rgba(240,208,128,.15);border:1px solid rgba(240,208,128,.3);color:#F0D080;font-size:11px;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:1rem">Sans engagement — Résiliable à tout moment</div>
+    <h1>Des tarifs clairs,<br>sans mauvaise surprise</h1>
+    <p>Commencez gratuitement. Passez Pro ou Business quand vous êtes prêt.</p>
+    <div class="pricing-toggle">
+      <span class="toggle-label active" id="lblMonthly">Mensuel</span>
+      <button class="toggle-pill" id="billingToggle" onclick="toggleBilling()"><div class="toggle-thumb"></div></button>
+      <span class="toggle-label" id="lblAnnual">Annuel <span class="badge-annual">−20%</span></span>
+    </div>
+  </div>
+
+  <div class="pricing-section">
+
+    <!-- PLANS -->
+    <div class="plans-grid">
+
+      <!-- GRATUIT -->
+      <div class="plan-card">
+        <div class="plan-header">
+          <div class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/></svg></div>
+          <div class="plan-name">Découverte</div>
+          <div class="plan-tagline">Pour démarrer sans engagement</div>
+        </div>
+        <div class="plan-price-box">
+          <div class="plan-price">0 €<sub> / mois</sub></div>
+          <div class="plan-price-annual">Pour toujours — aucune CB requise</div>
+        </div>
+        <div class="plan-body">
+          <ul class="plan-features">
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>5 documents</strong> générés / mois</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Export <strong>PDF</strong> inclus</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Toutes les <strong>catégories</strong> accessibles</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Références légales <strong>2025/2026</strong></span></li>
+            <li class="no"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span>Export Excel modifiable</span></li>
+            <li class="no"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span>Historique & sauvegarde</span></li>
+            <li class="no"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span>Support prioritaire</span></li>
+          </ul>
+          <button class="btn-plan free" onclick="showApp()">Démarrer avec Découverte</button>
+        </div>
+      </div>
+
+      <!-- PRO -->
+      <div class="plan-card popular">
+        <div class="plan-header">
+          <div class="popular-badge">Le plus populaire</div>
+          <div class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="plan-name">Croissance</div>
+          <div class="plan-tagline">Pour les indépendants et freelances</div>
+        </div>
+        <div class="plan-price-box">
+          <div class="plan-price" id="priceProDisplay"><sup>€</sup><span id="priceProNum">15</span><sub> / mois</sub></div>
+          <div class="plan-price-annual" id="priceProSub">Facturation mensuelle</div>
+        </div>
+        <div class="plan-body">
+          <ul class="plan-features">
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Documents illimités</strong></span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Export <strong>PDF</strong> + <strong>Excel modifiable</strong></span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Barème <strong>URSSAF 2025</strong> intégré</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Historique</strong> et sauvegarde</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Mises à jour légales <strong>automatiques</strong></span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Support <strong>prioritaire</strong> par email</span></li>
+            <li class="no"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span>Multi-utilisateurs</span></li>
+          </ul>
+          <button class="btn-plan pro">Démarrer l'essai gratuit 7 jours</button>
+        </div>
+      </div>
+
+      <!-- BUSINESS -->
+      <div class="plan-card business">
+        <div class="plan-header">
+          <div class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#F0D080" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="plan-name">Premium</div>
+          <div class="plan-tagline">Pour les équipes et structures</div>
+        </div>
+        <div class="plan-price-box">
+          <div class="plan-price" id="priceBizDisplay"><sup>€</sup><span id="priceBizNum">37</span><sub> / mois</sub></div>
+          <div class="plan-price-annual" id="priceBizSub">Facturation mensuelle</div>
+        </div>
+        <div class="plan-body">
+          <ul class="plan-features">
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Tout le plan Pro inclus</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>5 utilisateurs</strong> inclus</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Gestion d'équipe et <strong>droits d'accès</strong></span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Logo et charte</strong> personnalisés sur PDF</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Bibliothèque de documents <strong>partagée</strong></span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Support <strong>téléphonique</strong> dédié</span></li>
+            <li class="yes"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>Accès <strong>API</strong> (bêta)</span></li>
+          </ul>
+          <button class="btn-plan biz">Contacter l'équipe commerciale</button>
+        </div>
+      </div>
+
+    </div><!-- /plans-grid -->
+
+    <!-- TABLEAU COMPARATIF -->
+    <div class="compare-section">
+      <div class="compare-title">Comparez les plans en détail</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width:38%">Fonctionnalité</th>
+            <th>Découverte</th>
+            <th class="col-pop">Croissance — 15 €/mois</th>
+            <th>Premium — 37 €/mois</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="background:var(--surf2);font-weight:700;font-size:11px;color:var(--blue);letter-spacing:.05em;text-transform:uppercase">Génération de documents</td></tr>
+          <tr><td>Nombre de documents / mois</td><td>5</td><td class="col-pop">Illimité</td><td>Illimité</td></tr>
+          <tr><td>Catégories disponibles</td><td>Toutes</td><td class="col-pop">Toutes</td><td>Toutes</td></tr>
+          <tr><td>Références légales françaises 2025/2026</td><td class="check-yes">✓</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Horodatage automatique</td><td class="check-yes">✓</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td colspan="4" style="background:var(--surf2);font-weight:700;font-size:11px;color:var(--blue);letter-spacing:.05em;text-transform:uppercase">Export & Formats</td></tr>
+          <tr><td>Export PDF</td><td class="check-yes">✓</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>PDF mise en forme française (émetteur / dest.)</td><td class="check-yes">✓</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Export Excel modifiable (.xlsx)</td><td class="check-no">—</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Logo et en-tête personnalisés sur PDF</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td class="check-yes">✓</td></tr>
+          <tr><td colspan="4" style="background:var(--surf2);font-weight:700;font-size:11px;color:var(--blue);letter-spacing:.05em;text-transform:uppercase">Gestion & Collaboration</td></tr>
+          <tr><td>Historique des documents</td><td class="check-no">—</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Sauvegarde & réutilisation</td><td class="check-no">—</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Multi-utilisateurs</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td>Jusqu'à 5</td></tr>
+          <tr><td>Bibliothèque partagée d'équipe</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td class="check-yes">✓</td></tr>
+          <tr><td>Gestion des droits d'accès</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td class="check-yes">✓</td></tr>
+          <tr><td colspan="4" style="background:var(--surf2);font-weight:700;font-size:11px;color:var(--blue);letter-spacing:.05em;text-transform:uppercase">Support & Mises à jour</td></tr>
+          <tr><td>Mises à jour légales automatiques</td><td class="check-yes">✓</td><td class="col-pop check-yes">✓</td><td class="check-yes">✓</td></tr>
+          <tr><td>Support email</td><td class="check-no">—</td><td class="col-pop check-yes">Prioritaire</td><td class="check-yes">Prioritaire</td></tr>
+          <tr><td>Support téléphonique dédié</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td class="check-yes">✓</td></tr>
+          <tr><td>Accès API (bêta)</td><td class="check-no">—</td><td class="col-pop check-no">—</td><td class="check-yes">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <div class="faq-title">Questions fréquentes</div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Puis-je annuler à tout moment ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Oui, sans engagement ni frais de résiliation. Votre accès Pro reste actif jusqu'à la fin de la période facturée.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Les documents sont-ils vraiment conformes à la loi française ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Tous les modèles intègrent les références légales françaises en vigueur (Code du travail, Code civil, Code de commerce, RGPD 2025/2026). Ils sont mis à jour automatiquement. Pour tout acte engageant, nous recommandons la validation par un professionnel du droit.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Qu'est-ce que l'export Excel inclut ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">L'export Excel (disponible à partir du plan Pro) génère un fichier .xlsx modifiable directement dans Excel ou Google Sheets, avec formules automatiques, barème kilométrique URSSAF 2025 intégré, listes déroulantes et tableau de validation RH.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Mes données sont-elles stockées sur vos serveurs ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">En plan Gratuit, aucune donnée n'est stockée — la génération se fait entièrement dans votre navigateur. En plan Pro et Business, vos documents sont sauvegardés dans votre espace sécurisé (chiffrement AES-256).</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Y a-t-il un essai gratuit pour le plan Pro ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Oui, 7 jours d'essai gratuit sans carte bancaire. À l'issue de l'essai, vous choisissez de continuer (15 €/mois) ou revenez au plan Gratuit automatiquement.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Le plan Business convient-il aux cabinets et experts-comptables ? <span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Oui. Le plan Business a été conçu pour les équipes jusqu'à 5 utilisateurs, avec bibliothèque partagée, droits d'accès différenciés et personnalisation aux couleurs du cabinet.</div>
+      </div>
+    </div>
+
+  </div><!-- /pricing-section -->
+
+  <!-- GARANTIE -->
+  <div class="guarantee">
+    <svg viewBox="0 0 24 24" width="28" height="28" stroke="var(--blue)" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:.5rem"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <div style="font-size:16px;font-weight:600;color:var(--ink);margin-bottom:.3rem">Satisfait ou remboursé — 14 jours</div>
+    <p>Si BriefMaker Pro ne répond pas à vos attentes dans les 14 jours suivant votre souscription, nous vous remboursons intégralement, sans question.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="lp-foot">
+    <p><strong>BriefMaker Pro</strong> · Tarifs HT · TVA 20% applicable aux professionnels · Paiement sécurisé via Stripe</p>
+    <p style="margin-top:.4rem">Tous les tarifs s'entendent en euros HT. Pour toute question : contact@briefmakerpro.fr</p>
+  </div>
+
+</div><!-- /pricingPage -->
+
+<!-- MODALE PRO -->
+<div class="modal-overlay" id="proModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <h3>Fonctionnalité Pro</h3>
+    <p>L'export Excel avec formules automatiques, barème kilométrique URSSAF intégré et tableau de validation est réservé aux abonnés <strong>BriefMaker Pro</strong>.</p>
+    <div class="modal-perks">
+      <ul>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Export Excel (.xlsx) modifiable — toutes catégories</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Formules automatiques + barème URSSAF 2025</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Accès illimité à tous les documents</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Mises à jour légales automatiques</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Historique & sauvegarde de vos documents</li>
+      </ul>
+    </div>
+    <div class="modal-price">9 € <span>/ mois — sans engagement</span></div>
+    <button class="btn-modal-cta" onclick="closeModal()">Passer à Pro — 9 €/mois</button>
+    <button class="btn-modal-skip" onclick="closeModal()">Continuer avec le PDF gratuit</button>
+  </div>
+</div>
+
 <script>
 // ── HORLOGE ──────────────────────────────────────────────────
 function tick(){
@@ -308,14 +624,43 @@ setInterval(tick,1000);tick();
 function showLanding(){
   document.getElementById("landingPage").style.display="block";
   document.getElementById("appPage").style.display="none";
+  document.getElementById("pricingPage").style.display="none";
   window.scrollTo(0,0);
 }
 function showApp(ci){
   document.getElementById("landingPage").style.display="none";
   document.getElementById("appPage").style.display="block";
+  document.getElementById("pricingPage").style.display="none";
   if(ci!==undefined)openCats.add(ci);
   buildSidebar();
   window.scrollTo(0,0);
+}
+function showPricing(){
+  document.getElementById("landingPage").style.display="none";
+  document.getElementById("appPage").style.display="none";
+  document.getElementById("pricingPage").style.display="block";
+  window.scrollTo(0,0);
+}
+
+// ── TOGGLE FACTURATION ───────────────────────────────────────
+let isAnnual=false;
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  const btn=document.getElementById("billingToggle");
+  btn.classList.toggle("annual",isAnnual);
+  document.getElementById("lblMonthly").classList.toggle("active",!isAnnual);
+  document.getElementById("lblAnnual").classList.toggle("active",isAnnual);
+  // Pro : 15€ mensuel → 12€ annuel (×12 = 144€)
+  document.getElementById("priceProNum").textContent=isAnnual?"12":"15";
+  document.getElementById("priceProSub").textContent=isAnnual?"soit 144 € / an — économisez 36 €":"Facturation mensuelle";
+  // Business : 37€ mensuel → 30€ annuel (×12 = 360€)
+  document.getElementById("priceBizNum").textContent=isAnnual?"30":"37";
+  document.getElementById("priceBizSub").textContent=isAnnual?"soit 360 € / an — économisez 84 €":"Facturation mensuelle";
+}
+
+// ── FAQ ACCORDION ────────────────────────────────────────────
+function toggleFaq(el){
+  el.classList.toggle("open");
 }
 
 // ── BIBLIOTHÈQUE D'ICÔNES SVG (monochrome bleu) ───────────────
@@ -366,657 +711,161 @@ function ico(name){return `<span class="ico">${SVG[name]||SVG.doc}</span>`;}
 // ── CATALOGUE ────────────────────────────────────────────────
 const catalogue=[
 {cat:"Ressources humaines",catIcon:"rh",docs:[
+
 {id:"rh-offre",label:"Offre d'emploi",icon:"offre",legal:"Art. L.5331-1 C.trav. — Non-discrimination",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"poste",l:"Poste",ph:"Ex : Chargé(e) marketing"},{id:"contrat",l:"Contrat",ph:"Ex : CDI temps plein"},{id:"lieu",l:"Lieu",ph:"Ex : Paris / Télétravail"},{id:"missions",l:"Missions",ph:"Ex : Gérer réseaux, créer contenus...",type:"textarea"},{id:"profil",l:"Profil",ph:"Ex : Bac+3, 2 ans exp."},{id:"ava",l:"Avantages",ph:"Ex : Télétravail, TR, mutuelle"}],
- gen:v=>`OFFRE D'EMPLOI — ${v.poste.toUpperCase()}
-Entreprise : ${v.ent} | Contrat : ${v.contrat} | Lieu : ${v.lieu}
-Date : ${window.TODAY}
-[Ref. OFFRE-${new Date().getFullYear()}-XXX]
-----------------------------------------
-Conforme art. L.1132-1 et L.5331-1 C.trav. — Non-discrimination.
-
-QUI SOMMES-NOUS ?
-${v.ent} est une structure dynamique placant l'innovation et l'humain au coeur de son developpement.
-
-LE POSTE : ${v.poste} (${v.contrat}) — ${v.lieu}
-
-MISSIONS :
-${v.missions.split("\n").filter(m=>m.trim()).map((m,i)=>`${i+1}. ${m.trim()}`).join("\n")||v.missions}
-
-PROFIL : ${v.profil}
-Qualites : autonomie, relationnel, outils numeriques, initiative.
-
-AVANTAGES :
-${v.ava.split(",").map(a=>`- ${a.trim()}`).join("\n")}
-
-CANDIDATURE : recrutement@${v.ent.toLowerCase().replace(/\s+/g,"")}.fr
-CV + lettre de motivation. Traitement dans l'ordre de reception.`},
+ gen:function(v){
+  var mlist=v.missions.split("\n").filter(function(m){return m.trim();}).map(function(m,i){return (i+1)+". "+m.trim();}).join("\n")||v.missions;
+  var alist=v.ava.split(",").map(function(a){return "- "+a.trim();}).join("\n");
+  return "OFFRE D'EMPLOI — "+v.poste.toUpperCase()+"\nEntreprise : "+v.ent+" | Contrat : "+v.contrat+" | Lieu : "+v.lieu+"\nDate : "+window.TODAY+"\n[Ref. OFFRE-"+(new Date().getFullYear())+"-XXX]\n----------------------------------------\nConforme art. L.1132-1 et L.5331-1 C.trav. — Non-discrimination.\n\nQUI SOMMES-NOUS ?\n"+v.ent+" est une structure dynamique placant l'innovation et l'humain au coeur de son developpement.\n\nLE POSTE : "+v.poste+" ("+v.contrat+") — "+v.lieu+"\n\nMISSIONS :\n"+mlist+"\n\nPROFIL : "+v.profil+"\nQualites : autonomie, relationnel, outils numeriques, initiative.\n\nAVANTAGES :\n"+alist+"\n\nCANDIDATURE : recrutement@"+v.ent.toLowerCase().replace(/\s+/g,"")+".fr\nCV + lettre de motivation. Traitement dans l'ordre de reception.";
+ }},
 
 {id:"rh-cdi",label:"Contrat CDI",icon:"cdi",legal:"Art. L.1221-1 et suivants C.trav. 2025",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"naiss",l:"Né(e) le / à",ph:"Ex : 15/03/1990 à Lyon"},{id:"poste",l:"Poste / qualification",ph:"Ex : Chargée communication"},{id:"debut",l:"Date de début",ph:"Ex : 02/06/2026"},{id:"salaire",l:"Salaire brut mensuel",ph:"Ex : 2 200,00 € brut"},{id:"essai",l:"Période d'essai",ph:"Ex : 2 mois renouvelables"},{id:"cc",l:"Convention collective",ph:"Ex : Syntec IDCC 1486"}],
- gen:v=>`CONTRAT DE TRAVAIL A DUREE INDETERMINEE (CDI)
-Conforme Code du travail — Version 2025
-AVERTISSEMENT : Faire valider par expert-comptable ou avocat.
-----------------------------------------
-EMPLOYEUR : ${v.ent} | SIRET : ${v.siret} | Siege : ${v.siege}
-SALARIE(E) : ${v.salarie} | Ne(e) le : ${v.naiss}
-
-ART.1 — ENGAGEMENT (L.1221-1)
-Engagement de ${v.salarie} en qualite de ${v.poste} a compter du ${v.debut}.
-Contrat a duree indeterminee.
-
-ART.2 — PERIODE D'ESSAI (L.1221-19)
-Duree : ${v.essai}. Rupture possible avec preavis legal (L.1221-25).
-
-ART.3 — LIEU DE TRAVAIL : ${v.siege}
-
-ART.4 — DUREE DU TRAVAIL (L.3121-27)
-35 heures hebdomadaires. Heures sup selon accord d'entreprise.
-
-ART.5 — REMUNERATION : ${v.salaire} brut/mois.
-Virement mensuel. Bulletin delivre (L.3243-1).
-
-ART.6 — CONGES PAYES (L.3141-1)
-2,5 jours ouvrables/mois soit 30 jours/an.
-
-ART.7 — PROTECTION SOCIALE
-Affiliation URSSAF, AGIRC-ARRCO, prevoyance, mutuelle obligatoire.
-
-ART.8 — CONVENTION COLLECTIVE : ${v.cc}
-
-ART.9 — CONFIDENTIALITE (L.1227-1) : obligation stricte.
-
-ART.10 — RUPTURE : selon dispositions Code du travail en vigueur.
-
-Fait le ${window.TODAY}, en deux exemplaires.
-Employeur : _________________     Salarie(e) : _________________
-${v.ent}                           ${v.salarie} ("Lu et approuve")`},
+ gen:function(v){return "CONTRAT DE TRAVAIL A DUREE INDETERMINEE (CDI)\nConforme Code du travail — Version 2025\nAVERTISSEMENT : Faire valider par expert-comptable ou avocat.\n----------------------------------------\nEMPLOYEUR : "+v.ent+" | SIRET : "+v.siret+" | Siege : "+v.siege+"\nSALARIE(E) : "+v.salarie+" | Ne(e) le : "+v.naiss+"\n\nART.1 — ENGAGEMENT (L.1221-1)\nEngagement de "+v.salarie+" en qualite de "+v.poste+" a compter du "+v.debut+".\nContrat a duree indeterminee.\n\nART.2 — PERIODE D'ESSAI (L.1221-19)\nDuree : "+v.essai+". Rupture possible avec preavis legal (L.1221-25).\n\nART.3 — LIEU DE TRAVAIL : "+v.siege+"\n\nART.4 — DUREE DU TRAVAIL (L.3121-27)\n35 heures hebdomadaires. Heures sup selon accord d'entreprise.\n\nART.5 — REMUNERATION : "+v.salaire+" brut/mois.\nVirement mensuel. Bulletin delivre (L.3243-1).\n\nART.6 — CONGES PAYES (L.3141-1)\n2,5 jours ouvrables/mois soit 30 jours/an.\n\nART.7 — PROTECTION SOCIALE\nAffiliation URSSAF, AGIRC-ARRCO, prevoyance, mutuelle obligatoire.\n\nART.8 — CONVENTION COLLECTIVE : "+v.cc+"\n\nART.9 — CONFIDENTIALITE (L.1227-1) : obligation stricte.\n\nART.10 — RUPTURE : selon dispositions Code du travail en vigueur.\n\nFait le "+window.TODAY+", en deux exemplaires.\nEmployeur : _________________     Salarie(e) : _________________\n"+v.ent+"                           "+v.salarie+' ("Lu et approuve")';
+ }},
 
 {id:"rh-cdd",label:"Contrat CDD",icon:"doc",legal:"Art. L.1242-1 et suivants — Motifs limitatifs",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Paul Martin"},{id:"poste",l:"Poste",ph:"Ex : Assistant(e) admin."},{id:"motif",l:"Motif légal (obligatoire)",ph:"Ex : Accroissement temporaire activité (L.1242-2 2°)"},{id:"debut",l:"Début",ph:"Ex : 01/06/2026"},{id:"fin",l:"Fin",ph:"Ex : 31/08/2026"},{id:"salaire",l:"Salaire brut",ph:"Ex : 1 900,00 € brut/mois"},{id:"cc",l:"Convention collective",ph:"Ex : Syntec"}],
- gen:v=>`CONTRAT DE TRAVAIL A DUREE DETERMINEE (CDD)
-Conforme Art. L.1242-1 et suivants C.trav. 2025
-AVERTISSEMENT : CDD autorise uniquement pour motifs limitatifs art. L.1242-2.
-Tout CDD hors cas legaux = requalification en CDI possible.
-----------------------------------------
-EMPLOYEUR : ${v.ent}
-SALARIE(E) : ${v.salarie} — Poste : ${v.poste}
-
-ART.1 — MOTIF (obligatoire L.1242-12) : ${v.motif}
-
-ART.2 — DUREE : du ${v.debut} au ${v.fin}.
-Max renouvellements : 2 fois dans limite duree legale (L.1243-13).
-
-ART.3 — REMUNERATION : ${v.salaire}
-[Ne peut etre < au salaire CDI meme qualification — L.1242-15]
-
-ART.4 — PRIME DE PRECARITE (L.1243-8)
-10% du salaire brut total verse a l'echeance (sauf CDI, faute grave, rupture a l'initiative du salarie).
-
-ART.5 — PERIODE D'ESSAI (L.1242-10)
-1 jour/semaine dans la limite de 2 semaines (CDD<6mois) ou 1 mois (>6mois).
-
-ART.6 — CONGES PAYES (L.3141-1) + indemnite compensatrice si non pris.
-
-ART.7 — CONVENTION COLLECTIVE : ${v.cc}
-
-ART.8 — RUPTURE ANTICIPEE (L.1243-1)
-Possible : accord parties, faute grave, inaptitude, embauche CDI.
-Hors ces cas : dommages et interets.
-
-Fait le ${window.TODAY}. Employeur : _______  Salarie(e) : _______  ("Lu et approuve")`},
+ gen:function(v){return "CONTRAT DE TRAVAIL A DUREE DETERMINEE (CDD)\nConforme Art. L.1242-1 et suivants C.trav. 2025\nAVERTISSEMENT : CDD autorise uniquement pour motifs limitatifs art. L.1242-2.\nTout CDD hors cas legaux = requalification en CDI possible.\n----------------------------------------\nEMPLOYEUR : "+v.ent+"\nSALARIE(E) : "+v.salarie+" — Poste : "+v.poste+"\n\nART.1 — MOTIF (obligatoire L.1242-12) : "+v.motif+"\n\nART.2 — DUREE : du "+v.debut+" au "+v.fin+".\nMax renouvellements : 2 fois dans limite duree legale (L.1243-13).\n\nART.3 — REMUNERATION : "+v.salaire+"\n[Ne peut etre < au salaire CDI meme qualification — L.1242-15]\n\nART.4 — PRIME DE PRECARITE (L.1243-8)\n10% du salaire brut total verse a l'echeance.\n\nART.5 — PERIODE D'ESSAI (L.1242-10)\n1 jour/semaine dans la limite de 2 semaines (CDD<6mois) ou 1 mois (>6mois).\n\nART.6 — CONGES PAYES (L.3141-1) + indemnite compensatrice si non pris.\n\nART.7 — CONVENTION COLLECTIVE : "+v.cc+"\n\nART.8 — RUPTURE ANTICIPEE (L.1243-1)\nPossible : accord parties, faute grave, inaptitude, embauche CDI.\nHors ces cas : dommages et interets.\n\nFait le "+window.TODAY+". Employeur : _______  Salarie(e) : _______  (\"Lu et approuve\")";
+ }},
 
 {id:"rh-attestation",label:"Attestation d'emploi",icon:"badge",legal:"Art. L.1221-15 C.trav. — Délivrance obligatoire",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"sign",l:"Signataire",ph:"Ex : Sophie Martin, DRH"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"poste",l:"Poste",ph:"Ex : Chargée communication"},{id:"contrat_t",l:"Type contrat",ph:"Ex : CDI / CDD jusqu'au XX/XX"},{id:"debut",l:"Date d'entrée",ph:"Ex : 15 mars 2024"},{id:"salaire",l:"Salaire brut mensuel",ph:"Ex : 2 200 € brut"},{id:"dest",l:"Destinataire",ph:"Ex : Banque / Bailleur / France Travail"}],
- gen:v=>`ATTESTATION D'EMPLOI
-(Art. L.1221-15 du Code du travail — Delivrance obligatoire sur demande)
-----------------------------------------
-Delivree le ${window.TODAY} a la demande de l'interesse(e)
-
-Je soussigne(e), ${v.sign}, au nom de ${v.ent},
-
-ATTESTE ET CERTIFIE QUE :
-
-${v.salarie} est employe(e) au sein de ${v.ent} :
-- Poste : ${v.poste}
-- Contrat : ${v.contrat_t}
-- Entree le : ${v.debut}
-- Salaire brut mensuel : ${v.salaire}
-
-Delivree pour valoir ce que de droit aupres de : ${v.dest}.
-
-Fait le ${window.TODAY}. Signature + cachet :
-${v.sign} — ${v.ent}`},
+ gen:function(v){return "ATTESTATION D'EMPLOI\n(Art. L.1221-15 du Code du travail — Delivrance obligatoire sur demande)\n----------------------------------------\nDelivree le "+window.TODAY+" a la demande de l'interesse(e)\n\nJe soussigne(e), "+v.sign+", au nom de "+v.ent+",\n\nATTESTE ET CERTIFIE QUE :\n\n"+v.salarie+" est employe(e) au sein de "+v.ent+" :\n- Poste : "+v.poste+"\n- Contrat : "+v.contrat_t+"\n- Entree le : "+v.debut+"\n- Salaire brut mensuel : "+v.salaire+"\n\nDelivree pour valoir ce que de droit aupres de : "+v.dest+".\n\nFait le "+window.TODAY+". Signature + cachet :\n"+v.sign+" — "+v.ent;
+ }},
 
 {id:"rh-avertissement",label:"Avertissement disciplinaire",icon:"warn",legal:"Art. L.1332-1 C.trav. — Procédure respectée",pdfType:"lettre",
- fields:[
-   {id:"exp",l:"Entreprise (émetteur)",ph:"Ex : CRÉALAB SAS"},
-   {id:"adresse_exp",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
-   {id:"salarie",l:"Salarié(e) destinataire",ph:"Ex : Jean Martin"},
-   {id:"adresse_dest",l:"Adresse salarié(e)",ph:"Ex : 5 rue du Parc, 75020 Paris"},
-   {id:"poste",l:"Poste",ph:"Ex : Commercial"},
-   {id:"objet",l:"Objet",ph:"Ex : Avertissement disciplinaire"},
-   {id:"corps",l:"Corps de la lettre (faits reprochés + notification)",ph:"Nous avons constaté les faits suivants vous concernant, le [date des faits] :\n\n[Décrire précisément les faits : nature du manquement, heure, contexte, témoins éventuels...]\n\nCes faits constituent un manquement à vos obligations professionnelles en violation des règles en vigueur dans notre entreprise.\n\nConformément à l'article L.1332-1 du Code du travail, nous vous notifions le présent avertissement.\n\nNous vous demandons expressément de ne pas renouveler ces comportements. Tout nouvel incident pourra donner lieu à une sanction disciplinaire plus sévère, pouvant aller jusqu'au licenciement pour faute.\n\nVous disposez d'un délai de 2 mois à compter de la notification pour contester cette sanction devant le Conseil de prud'hommes (art. L.1471-1 du Code du travail).\n\nVeuillez agréer, Madame / Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}
- ],
- gen:v=>`${v.corps}
-
-[Nom et qualité du signataire]
-${v.exp}
-
-Mode de remise : Remise en main propre contre décharge / LRAR`,},
+ fields:[{id:"exp",l:"Entreprise (émetteur)",ph:"Ex : CRÉALAB SAS"},{id:"adresse_exp",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},{id:"salarie",l:"Salarié(e) destinataire",ph:"Ex : Jean Martin"},{id:"adresse_dest",l:"Adresse salarié(e)",ph:"Ex : 5 rue du Parc, 75020 Paris"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"objet",l:"Objet",ph:"Ex : Avertissement disciplinaire"},{id:"corps",l:"Corps de la lettre",ph:"Nous avons constaté les faits suivants le [date] :\n\n[Décrire précisément les faits...]\n\nCes faits constituent un manquement à vos obligations.\nConformément à l'article L.1332-1 du Code du travail, nous vous notifions le présent avertissement.\n\nTout renouvellement pourra entraîner une sanction plus sévère.\nVous disposez de 2 mois pour contester devant le CPH (art. L.1471-1).\n\nVeuillez agréer, Madame / Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}],
+ gen:function(v){return v.corps+"\n\n[Nom et qualité du signataire]\n"+v.exp+"\n\nMode de remise : Remise en main propre contre décharge / LRAR";
+ }},
 
 {id:"rh-solde",label:"Solde de tout compte",icon:"wallet",legal:"Art. L.1234-20 — Délai contestation 6 mois",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Jean Dupont"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"fin",l:"Date fin contrat",ph:"Ex : 31 mai 2026"},{id:"motif",l:"Motif de rupture",ph:"Ex : Licenciement / Démission / Rupture conventionnelle"},{id:"montant",l:"Montant net total",ph:"Ex : 3 850,00 € net"}],
- gen:v=>`RECU POUR SOLDE DE TOUT COMPTE
-(Article L.1234-20 du Code du travail)
-ATTENTION : Document opposable apres 6 mois sans contestation.
-----------------------------------------
-Je soussigne(e) ${v.salarie}, ex-${v.poste}, RECONNAIS avoir recu de
-${v.ent} la somme de ${v.montant} nets en reglement de toutes sommes dues.
-
-DETAIL :
-- Salaire prorata dernier mois : _______ €
-- Indemnite CP (L.3141-28) : _______ €
-- Indemnite preavis : _______ €
-- Indemnite licenciement (L.1234-9 / R.1234-1) : _______ €
-- Rupture conventionnelle (L.1237-13) : _______ €
-- Prime precarite CDD 10% (L.1243-8) : _______ €
-- TOTAL NET : ${v.montant}
-
-Fin contrat : ${v.fin} | Motif : ${v.motif}
-
-DROITS : 6 mois pour contester (L.1234-20).
-Certificat de travail delivre (L.1234-19).
-Attestation France Travail delivree (R.1234-9).
-
-Le ${window.TODAY}. Employeur : _______  Salarie(e) : _______ ("Lu et approuve")`},
+ gen:function(v){return "RECU POUR SOLDE DE TOUT COMPTE\n(Article L.1234-20 du Code du travail)\nATTENTION : Document opposable apres 6 mois sans contestation.\n----------------------------------------\nJe soussigne(e) "+v.salarie+", ex-"+v.poste+", RECONNAIS avoir recu de\n"+v.ent+" la somme de "+v.montant+" nets en reglement de toutes sommes dues.\n\nDETAIL :\n- Salaire prorata dernier mois : _______ €\n- Indemnite CP (L.3141-28) : _______ €\n- Indemnite preavis : _______ €\n- Indemnite licenciement (L.1234-9 / R.1234-1) : _______ €\n- Rupture conventionnelle (L.1237-13) : _______ €\n- Prime precarite CDD 10% (L.1243-8) : _______ €\n- TOTAL NET : "+v.montant+"\n\nFin contrat : "+v.fin+" | Motif : "+v.motif+"\n\nDROITS : 6 mois pour contester (L.1234-20).\nCertificat de travail delivre (L.1234-19).\nAttestation France Travail delivree (R.1234-9).\n\nLe "+window.TODAY+". Employeur : _______  Salarie(e) : _______ (\"Lu et approuve\")";
+ }},
 
 {id:"rh-teletravail",label:"Accord télétravail",icon:"home",legal:"Art. L.1222-9 C.trav. — ANI 26/11/2020",
  fields:[{id:"ent",l:"Employeur",ph:"Ex : CRÉALAB SAS"},{id:"salarie",l:"Salarié(e)",ph:"Ex : Marie Dupont"},{id:"poste",l:"Poste",ph:"Ex : Chargée communication"},{id:"jours",l:"Jours télétravail",ph:"Ex : Lundi et mercredi"},{id:"debut",l:"Date d'effet",ph:"Ex : 01/06/2026"},{id:"duree",l:"Durée",ph:"Ex : 12 mois renouvelables"}],
- gen:v=>`AVENANT TELETRAVAIL
-(Art. L.1222-9 C.trav. — ANI Teletravail 26/11/2020)
-----------------------------------------
-Employeur : ${v.ent} | Salarie(e) : ${v.salarie} — ${v.poste}
+ gen:function(v){return "AVENANT TELETRAVAIL\n(Art. L.1222-9 C.trav. — ANI Teletravail 26/11/2020)\n----------------------------------------\nEmployeur : "+v.ent+" | Salarie(e) : "+v.salarie+" — "+v.poste+"\n\nART.1 — Jours : "+v.jours+" | Prise effet : "+v.debut+" | Duree : "+v.duree+"\n\nART.2 — EQUIPEMENTS & FRAIS (L.1222-9 al.4)\nForfait URSSAF 2025 : 2,60 €/jour teletravail (plafond 57,20 €/mois).\nMateriel mis a disposition : [a preciser].\n\nART.3 — DROIT A LA DECONNEXION (L.2242-17)\nHors plages horaires convenues : pas d'obligation de reponse.\n\nART.4 — ACCIDENT DU TRAVAIL\nTout accident au domicile pendant le teletravail = accident du travail\n(L.411-1 CSS — Jurisprudence Cass. soc. 2019).\n\nART.5 — REVERSIBILITE : preavis d'1 mois par chaque partie.\n\nART.6 — RGPD : respect de la politique donnees de "+v.ent+".\n\nFait le "+window.TODAY+".\nEmployeur : _______  Salarie(e) : _______ (\"Lu et approuve\")";
+ }},
 
-ART.1 — Jours : ${v.jours} | Prise effet : ${v.debut} | Duree : ${v.duree}
-
-ART.2 — EQUIPEMENTS & FRAIS (L.1222-9 al.4)
-Forfait URSSAF 2025 : 2,60 €/jour teletravail (plafond 57,20 €/mois).
-Materiel mis a disposition : [a preciser].
-
-ART.3 — DROIT A LA DECONNEXION (L.2242-17)
-Hors plages horaires convenues : pas d'obligation de reponse.
-
-ART.4 — ACCIDENT DU TRAVAIL
-Tout accident au domicile pendant le teletravail = accident du travail
-(L.411-1 CSS — Jurisprudence Cass. soc. 2019).
-
-ART.5 — REVERSIBILITE : preavis d'1 mois par chaque partie.
-
-ART.6 — RGPD : respect de la politique donnees de ${v.ent}.
-
-Fait le ${window.TODAY}.
-Employeur : _______  Salarie(e) : _______ ("Lu et approuve")`},
-
-{id:"rh-note-frais",label:"Note de frais",icon:"receipt",legal:"Barème URSSAF/DMFP 2025 — Exonération de charges",
- fields:[{id:"salarie",l:"Salarié(e)",ph:"Ex : Jean Dupont"},{id:"poste",l:"Poste",ph:"Ex : Commercial"},{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB"},{id:"periode",l:"Période",ph:"Ex : Mai 2026"},{id:"mission",l:"Objet / mission",ph:"Ex : Déplacement client Lyon — Salon PRO"}],
- gen:v=>`NOTE DE FRAIS PROFESSIONNELS
-Bareme URSSAF/DMFP 2025 — Exoneree de charges sociales dans les limites.
-----------------------------------------
-Salarie(e) : ${v.salarie} | ${v.poste} | ${v.ent}
-Periode : ${v.periode} | Objet : ${v.mission} | Soumis le : ${window.TODAY}
-
-DATE     | NATURE                       | MONTANT TTC | JUSTIF.
----------|------------------------------|-------------|--------
-         | Transport (train/avion/taxi)  |          €  | Joint
-         | Vehicule perso (km)           |          €  | Calcule
-         | Hebergement                   |          €  | Joint
-         | Repas deplacement seul        |          €  | Joint
-         | Repas avec client/equipe      |          €  | Joint
-         | Parking / peages              |          €  | Joint
-         | Autres                        |          €  | Joint
----------|------------------------------|-------------|--------
-TOTAL    |                              |          €  |
-
-BAREME KILOM. URSSAF 2025 : [__CV] x [__km] x [__€/km] = [__]€
-PLAFONDS EXONERES 2025 :
-- Repas deplacement : 20,70 €/repas
-- Hotel province : 90 €/nuit | Paris/IDF : 110 €/nuit
-
-Je certifie l'exactitude des informations. ${v.salarie} : _______  Date : ${window.TODAY}
-Validation manager : _______  | Comptabilite : _______`}
+{id:"rh-note-frais",label:"Note de frais",icon:"receipt",legal:"Barème URSSAF/DMFP 2025 — Exonération de charges",hasExcel:true,
+ fields:[{id:"salarie",l:"Nom du salarié",ph:"Ex : Jean Dupont"},{id:"poste",l:"Poste / Fonction",ph:"Ex : Commercial"},{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"periode",l:"Période",ph:"Ex : Mai 2026"},{id:"mission",l:"Objet / Mission",ph:"Ex : Déplacement client Lyon — Salon PRO 2026"},{id:"cv",l:"Cylindrée véhicule (pour IK)",ph:"Ex : 5 CV"},{id:"km",l:"Total km parcourus",ph:"Ex : 312"},{id:"taux_ik",l:"Taux IK (€/km)",ph:"Ex : 0.601"},{id:"repas",l:"Total repas (€)",ph:"Ex : 41.40"},{id:"hotel",l:"Total hôtel/hébergement (€)",ph:"Ex : 90.00"},{id:"transport",l:"Total transport train/avion (€)",ph:"Ex : 87.50"},{id:"carburant",l:"Total carburant (€)",ph:"Ex : 0"},{id:"peages",l:"Total péages/parking (€)",ph:"Ex : 12.00"},{id:"divers",l:"Autres frais (€)",ph:"Ex : 0"}],
+ gen:function(v){
+  var ik=(parseFloat(v.km)||0)*(parseFloat(v.taux_ik)||0);
+  var total=ik+(parseFloat(v.repas)||0)+(parseFloat(v.hotel)||0)+(parseFloat(v.transport)||0)+(parseFloat(v.carburant)||0)+(parseFloat(v.peages)||0)+(parseFloat(v.divers)||0);
+  return "NOTE DE FRAIS PROFESSIONNELS\nConforme bareme URSSAF/DMFP 2025 — Exoneree de charges dans les limites legales.\n----------------------------------------\nSalarie(e)  : "+v.salarie+" — "+v.poste+"\nEntreprise  : "+v.ent+"\nPeriode     : "+v.periode+"\nObjet       : "+v.mission+"\nSoumis le   : "+window.TODAY+"\n----------------------------------------\n\nDETAIL DES FRAIS :\n\nNature                          | Montant    | Justif.\n--------------------------------|------------|--------\nIndemnites kilo. ("+v.km+"km x "+v.taux_ik+"€) | "+ik.toFixed(2)+" €   | Calcule\nRepas                           | "+(v.repas||"0")+" €   | Joint\nHotel / Hebergement             | "+(v.hotel||"0")+" €   | Joint\nTransport (train/avion/taxi)    | "+(v.transport||"0")+" €   | Joint\nCarburant                       | "+(v.carburant||"0")+" €   | Joint\nPeages / Parking                | "+(v.peages||"0")+" €   | Joint\nDivers                          | "+(v.divers||"0")+" €   | Joint\n--------------------------------|------------|--------\nTOTAL A REMBOURSER              | "+total.toFixed(2)+" |\n\nBAREME KILOM. URSSAF 2025 ("+v.cv+") : "+v.km+" km x "+v.taux_ik+" €/km = "+ik.toFixed(2)+" €\nPLAFONDS EXONERES 2025 :\n- Repas deplacement : 20,70 €/repas\n- Hotel province : 90 €/nuit | Paris/IDF : 110 €/nuit\n\nJe certifie sur l'honneur que ces frais sont strictement professionnels.\nSalarie(e) : _____________     Date : "+window.TODAY+"\nManager    : _____________     Date : ___________\nComptabilite : ____________    Reglement le : _________";
+ }}
 ]},
 
 {cat:"Juridique & Contrats",catIcon:"jur",docs:[
+
 {id:"jur-nda",label:"NDA — Confidentialité",icon:"lock",legal:"Loi 2018-670 — Secret des affaires L.151-1 C.com.",
  fields:[{id:"p1",l:"Partie 1",ph:"Ex : CRÉALAB SAS"},{id:"p2",l:"Partie 2",ph:"Ex : XYZ SARL"},{id:"objet",l:"Objet confidentiel",ph:"Ex : Développement application mobile"},{id:"duree",l:"Durée",ph:"Ex : 3 ans à compter de la signature"}],
- gen:v=>`ACCORD DE CONFIDENTIALITE (NDA)
-Loi n°2018-670 du 30/07/2018 — Protection du secret des affaires.
-AVERTISSEMENT : Faire valider par un avocat.
-----------------------------------------
-ENTRE : ${v.p1} ET ${v.p2}
-Projet : ${v.objet}
-
-ART.1 — INFORMATIONS CONFIDENTIELLES (L.151-1 C.com.)
-Toutes informations techniques, commerciales, financieres, strategiques
-echangees dans le cadre du projet, quel que soit leur support.
-
-ART.2 — OBLIGATIONS
-Ne pas divulguer | Utiliser uniquement pour le projet
-Proteger avec le meme soin que ses propres secrets d'affaires.
-
-ART.3 — EXCEPTIONS
-Informations deja publiques | connues avant accord
-Obtenues licitement de tiers | Divulgation imposee par loi.
-
-ART.4 — DUREE : ${v.duree}
-
-ART.5 — SANCTIONS
-Responsabilite civile + penale. Injonction judiciaire possible.
-Dommages et interets + astreinte.
-
-ART.6 — RETOUR : restitution/destruction sur demande.
-
-Droit francais applicable. Fait le ${window.TODAY}.
-${v.p1} : _______     ${v.p2} : _______`},
+ gen:function(v){return "ACCORD DE CONFIDENTIALITE (NDA)\nLoi n°2018-670 du 30/07/2018 — Protection du secret des affaires.\nAVERTISSEMENT : Faire valider par un avocat.\n----------------------------------------\nENTRE : "+v.p1+" ET "+v.p2+"\nProjet : "+v.objet+"\n\nART.1 — INFORMATIONS CONFIDENTIELLES (L.151-1 C.com.)\nToutes informations techniques, commerciales, financieres, strategiques\nechangees dans le cadre du projet, quel que soit leur support.\n\nART.2 — OBLIGATIONS\nNe pas divulguer | Utiliser uniquement pour le projet\nProteger avec le meme soin que ses propres secrets d'affaires.\n\nART.3 — EXCEPTIONS\nInformations deja publiques | connues avant accord\nObtenues licitement de tiers | Divulgation imposee par loi.\n\nART.4 — DUREE : "+v.duree+"\n\nART.5 — SANCTIONS\nResponsabilite civile + penale. Injonction judiciaire possible.\nDommages et interets + astreinte.\n\nART.6 — RETOUR : restitution/destruction sur demande.\n\nDroit francais applicable. Fait le "+window.TODAY+".\n"+v.p1+" : _______     "+v.p2+" : _______";
+ }},
 
 {id:"jur-cgv",label:"CGV",icon:"file",legal:"Art. L.441-1 C.com. — RGPD — L.221-18 rétractation",
  fields:[{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"siret",l:"SIRET / N° TVA",ph:"Ex : 123 456 789 / FR12345678900"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"activite",l:"Activité",ph:"Ex : Prestations communication digitale"},{id:"contact",l:"Email SAV",ph:"Ex : contact@crealab.fr"},{id:"med",l:"Médiateur consommation",ph:"Ex : CM2C — mediateur@cm2c.net"}],
- gen:v=>`CONDITIONS GENERALES DE VENTE (CGV)
-${v.ent} — SIRET : ${v.siret} — ${v.siege}
-Version : ${window.TODAY} | Conforme L.441-1 C.com. + RGPD + DSA 2023
-AVERTISSEMENT : Faire valider par un avocat specialise.
-----------------------------------------
-ART.1 — CHAMP APPLICATION (L.441-1)
-S'applique a toutes ventes/prestations de ${v.ent} (${v.activite}).
+ gen:function(v){return "CONDITIONS GENERALES DE VENTE (CGV)\n"+v.ent+" — SIRET : "+v.siret+" — "+v.siege+"\nVersion : "+window.TODAY+" | Conforme L.441-1 C.com. + RGPD + DSA 2023\nAVERTISSEMENT : Faire valider par un avocat specialise.\n----------------------------------------\nART.1 — CHAMP APPLICATION (L.441-1)\nS'applique a toutes ventes/prestations de "+v.ent+" ("+v.activite+").\n\nART.2 — PRIX : HT, TVA en sus au taux legal. Devis signe = ferme.\n\nART.3 — PAIEMENT & PENALITES (L.441-10)\nDelai max pro : 30 jours/60 jours fin mois.\nPenalites retard : 3x taux interet legal + 40€ forfaitaires (D.441-5).\n\nART.4 — RETRACTATION PARTICULIERS (L.221-18)\n14 jours calendaires. Exceptions art. L.221-28.\n\nART.5 — GARANTIES (L.217-1 et suivants)\nGarantie legale conformite : 2 ans pour les biens.\n\nART.6 — RESPONSABILITE : limitee au montant de la commande.\n\nART.7 — PROPRIETE INTELLECTUELLE\nCessions apres paiement integral. Reproduction interdite.\n\nART.8 — DONNEES PERSONNELLES (RGPD — Reg. UE 2016/679)\nResponsable : "+v.ent+". Conservation 3 ans. Droits : "+v.contact+".\n\nART.9 — MEDIATION (L.612-1) : "+v.med+"\n\n"+v.ent+" — "+window.TODAY;
+ }},
 
-ART.2 — PRIX : HT, TVA en sus au taux legal. Devis signe = ferme.
-
-ART.3 — PAIEMENT & PENALITES (L.441-10)
-Delai max pro : 30 jours/60 jours fin mois.
-Penalites retard : 3x taux interet legal + 40€ forfaitaires (D.441-5).
-
-ART.4 — RETRACTATION PARTICULIERS (L.221-18)
-14 jours calendaires. Exceptions art. L.221-28.
-
-ART.5 — GARANTIES (L.217-1 et suivants)
-Garantie legale conformite : 2 ans pour les biens.
-
-ART.6 — RESPONSABILITE : limitee au montant de la commande.
-
-ART.7 — PROPRIETE INTELLECTUELLE
-Cessions apres paiement integral. Reproduction interdite.
-
-ART.8 — DONNEES PERSONNELLES (RGPD — Reg. UE 2016/679)
-Responsable : ${v.ent}. Conservation 3 ans. Droits : ${v.contact}.
-
-ART.9 — MEDIATION (L.612-1) : ${v.med}
-
-${v.ent} — ${window.TODAY}`},
-
-{id:"jur-prestation",label:"Contrat de prestation",icon:"hand",legal:"Code civil art. 1710 — Indépendance obligatoire",
+{id:"jur-prestation",label:"Contrat de prestation",icon:"link",legal:"Code civil art. 1710 — Indépendance obligatoire",
  fields:[{id:"pre",l:"Prestataire",ph:"Ex : CRÉALAB / Céline Martin AE"},{id:"siret",l:"SIRET prestataire",ph:"Ex : 987 654 321 00011"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"mis",l:"Mission (livrables précis)",ph:"Ex : Community management Instagram — 3 mois"},{id:"dur",l:"Durée",ph:"Ex : Du 01/06/2026 au 31/08/2026"},{id:"tar",l:"Rémunération",ph:"Ex : 1 500 € HT / mois"},{id:"preavis",l:"Préavis résiliation",ph:"Ex : 30 jours LRAR"}],
- gen:v=>`CONTRAT DE PRESTATION DE SERVICES
-Code civil — Articles 1710 et suivants.
-AVERTISSEMENT : Independance obligatoire. Lien de subordination
-= requalification en CDI possible (L.8221-6 C.trav.).
-----------------------------------------
-PRESTATAIRE : ${v.pre} | SIRET : ${v.siret}
-CLIENT : ${v.cli}
-
-ART.1 — MISSION : ${v.mis}
-[Livrables, delais et criteres de validation a preciser]
-
-ART.2 — DUREE : ${v.dur}
-
-ART.3 — REMUNERATION : ${v.tar}
-Facturation mensuelle. Paiement 30j reception facture.
-Penalites : 3x taux legal + 40€ forfaitaires (L.441-10 / D.441-5).
-
-ART.4 — INDEPENDANCE (ESSENTIEL)
-${v.pre} determine librement ses methodes. Aucun lien de subordination.
-Liberte de travailler pour d'autres clients.
-
-ART.5 — OBLIGATIONS : RC pro obligatoire. Confidentialite (L.151-1).
-
-ART.6 — PROPRIETE INTELLECTUELLE : cession apres paiement integral.
-
-ART.7 — RGPD : respect du reglement UE 2016/679.
-
-ART.8 — RESILIATION : preavis ${v.preavis}.
-
-Fait le ${window.TODAY}. ${v.pre} : _______  ${v.cli} : _______`},
+ gen:function(v){return "CONTRAT DE PRESTATION DE SERVICES\nCode civil — Articles 1710 et suivants.\nAVERTISSEMENT : Independance obligatoire. Lien de subordination\n= requalification en CDI possible (L.8221-6 C.trav.).\n----------------------------------------\nPRESTATAIRE : "+v.pre+" | SIRET : "+v.siret+"\nCLIENT : "+v.cli+"\n\nART.1 — MISSION : "+v.mis+"\n[Livrables, delais et criteres de validation a preciser]\n\nART.2 — DUREE : "+v.dur+"\n\nART.3 — REMUNERATION : "+v.tar+"\nFacturation mensuelle. Paiement 30j reception facture.\nPenalites : 3x taux legal + 40€ forfaitaires (L.441-10 / D.441-5).\n\nART.4 — INDEPENDANCE (ESSENTIEL)\n"+v.pre+" determine librement ses methodes. Aucun lien de subordination.\nLiberte de travailler pour d'autres clients.\n\nART.5 — OBLIGATIONS : RC pro obligatoire. Confidentialite (L.151-1).\n\nART.6 — PROPRIETE INTELLECTUELLE : cession apres paiement integral.\n\nART.7 — RGPD : respect du reglement UE 2016/679.\n\nART.8 — RESILIATION : preavis "+v.preavis+".\n\nFait le "+window.TODAY+". "+v.pre+" : _______  "+v.cli+" : _______";
+ }},
 
 {id:"jur-mise-en-demeure",label:"Mise en demeure",icon:"send",legal:"Code civil art. 1344 — Fait courir les intérêts",pdfType:"lettre",
- fields:[
-   {id:"exp",l:"Votre nom / entreprise",ph:"Ex : CRÉALAB SAS"},
-   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 12 rue des Arts, 75011 Paris"},
-   {id:"dest",l:"Destinataire",ph:"Ex : XYZ SARL — M. Dupont"},
-   {id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 5 avenue de la Gare, 69002 Lyon"},
-   {id:"objet",l:"Objet",ph:"Ex : Mise en demeure — Facture FAC-2026-042 impayée"},
-   {id:"delai",l:"Délai accordé",ph:"Ex : 8 jours calendaires"},
-   {id:"corps",l:"Corps de la lettre",ph:"Par la présente lettre recommandée avec accusé de réception, et conformément à l'article 1344 du Code civil, nous vous mettons en demeure de procéder au règlement de la facture n°FAC-2026-042 d'un montant de [montant] €, dont l'échéance était fixée au [date échéance].\n\nMalgré nos relances des [dates], ce règlement n'est toujours pas intervenu.\n\nNous vous accordons un délai de [X] jours calendaires à compter de la réception de la présente pour régulariser cette situation.\n\nPassé ce délai, nous nous verrons contraints d'engager toute procédure de recouvrement appropriée, dont les frais seront à votre charge, incluant les pénalités de retard au taux de 3 fois le taux légal et l'indemnité forfaitaire de recouvrement de 40 euros (art. D.441-5 du Code de commerce).\n\nNous espérons que cette situation pourra être résolue à l'amiable.\n\nVeuillez agréer, Madame, Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}
- ],
- gen:v=>`${v.corps}
-
-${v.exp}
-
-PJ : [Copie facture(s) — Bon(s) de commande — Échanges antérieurs]`},
+ fields:[{id:"exp",l:"Votre nom / entreprise",ph:"Ex : CRÉALAB SAS"},{id:"adresse_exp",l:"Votre adresse",ph:"Ex : 12 rue des Arts, 75011 Paris"},{id:"dest",l:"Destinataire",ph:"Ex : XYZ SARL — M. Dupont"},{id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 5 avenue de la Gare, 69002 Lyon"},{id:"objet",l:"Objet",ph:"Ex : Mise en demeure — Facture FAC-2026-042 impayée"},{id:"delai",l:"Délai accordé",ph:"Ex : 8 jours calendaires"},{id:"corps",l:"Corps de la lettre",ph:"Par la présente lettre recommandée, et conformément à l'article 1344 du Code civil, nous vous mettons en demeure de régler la facture n°[REF] d'un montant de [MONTANT] €, dont l'échéance était fixée au [DATE].\n\nMalgré nos relances des [DATES], ce règlement n'est toujours pas intervenu.\n\nNous vous accordons un délai de [X] jours pour régulariser. Passé ce délai, nous engagerons toute procédure de recouvrement, les frais étant à votre charge.\n\nVeuillez agréer, Madame, Monsieur, l'expression de nos salutations distinguées.",type:"textarea"}],
+ gen:function(v){return v.corps+"\n\n"+v.exp+"\n\nPJ : [Copie facture(s) — Bon(s) de commande — Échanges antérieurs]";
+ }},
 
 {id:"jur-cession-droits",label:"Cession droits d'auteur",icon:"copy",legal:"CPI art. L.131-1 à L.131-7 — Cession écrite obligatoire",
- fields:[{id:"auteur",l:"Auteur (cédant)",ph:"Ex : Marie Dupont, graphiste freelance"},{id:"cess",l:"Cessionnaire",ph:"Ex : CRÉALAB SAS"},{id:"oeuvre",l:"Œuvres cédées (précises)",ph:"Ex : Logo + charte graphique + 10 visuels"},{id:"terr",l:"Territoire",ph:"Ex : Monde entier"},{id:"duree",l:"Durée",ph:"Ex : Durée légale protection (70 ans post-mortem)"},{id:"prix",l:"Prix de cession",ph:"Ex : 800 € HT inclus dans prestation"}],
- gen:v=>`CONTRAT DE CESSION DE DROITS D'AUTEUR
-Code de la propriete intellectuelle — Art. L.131-1 a L.131-7
-AVERTISSEMENT : Cession doit etre expresse et ecrite (L.131-3 CPI).
-Cession globale oeuvres futures = NULLE (L.131-1 CPI).
-----------------------------------------
-AUTEUR (cedant) : ${v.auteur}
-CESSIONNAIRE : ${v.cess}
-
-ART.1 — OEUVRES CEDEES (L.131-3 — precision obligatoire)
-${v.oeuvre}
-
-ART.2 — DROITS CEDES (enumeration exhaustive)
-Reproduction | Representation/diffusion | Adaptation/transformation
-Distribution/commercialisation — Tous supports actuels et futurs.
-
-ART.3 — TERRITOIRE : ${v.terr}
-ART.4 — DUREE : ${v.duree}
-ART.5 — PRIX : ${v.prix}
-[Remuneration proportionnelle = principe. Forfait = exceptionnel (L.131-4).]
-
-ART.6 — DROIT MORAL (L.121-1 — incessible)
-Inalienable et imprescriptible. Mention du nom de l'auteur obligatoire.
-
-ART.7 — GARANTIES : auteur seul titulaire, oeuvre originale.
-
-Fait le ${window.TODAY}.
-Auteur : _______     Cessionnaire : _______
-${v.auteur}          ${v.cess}`}
+ fields:[{id:"auteur",l:"Auteur (cédant)",ph:"Ex : Marie Dupont, graphiste freelance"},{id:"cess",l:"Cessionnaire",ph:"Ex : CRÉALAB SAS"},{id:"oeuvre",l:"Oeuvres cédées (précises)",ph:"Ex : Logo + charte graphique + 10 visuels"},{id:"terr",l:"Territoire",ph:"Ex : Monde entier"},{id:"duree",l:"Durée",ph:"Ex : Durée légale protection (70 ans post-mortem)"},{id:"prix",l:"Prix de cession",ph:"Ex : 800 € HT inclus dans prestation"}],
+ gen:function(v){return "CONTRAT DE CESSION DE DROITS D'AUTEUR\nCode de la propriete intellectuelle — Art. L.131-1 a L.131-7\nAVERTISSEMENT : Cession doit etre expresse et ecrite (L.131-3 CPI).\nCession globale oeuvres futures = NULLE (L.131-1 CPI).\n----------------------------------------\nAUTEUR (cedant) : "+v.auteur+"\nCESSIONNAIRE : "+v.cess+"\n\nART.1 — OEUVRES CEDEES (L.131-3 — precision obligatoire)\n"+v.oeuvre+"\n\nART.2 — DROITS CEDES (enumeration exhaustive)\nReproduction | Representation/diffusion | Adaptation/transformation\nDistribution/commercialisation — Tous supports actuels et futurs.\n\nART.3 — TERRITOIRE : "+v.terr+"\nART.4 — DUREE : "+v.duree+"\nART.5 — PRIX : "+v.prix+"\n[Remuneration proportionnelle = principe. Forfait = exceptionnel (L.131-4).]\n\nART.6 — DROIT MORAL (L.121-1 — incessible)\nInalienable et imprescriptible. Mention du nom de l'auteur obligatoire.\n\nART.7 — GARANTIES : auteur seul titulaire, oeuvre originale.\n\nFait le "+window.TODAY+".\nAuteur : _______     Cessionnaire : _______\n"+v.auteur+"          "+v.cess;
+ }}
 ]},
 
 {cat:"Finance & Comptabilité",catIcon:"fin",docs:[
+
 {id:"fin-devis",label:"Devis commercial",icon:"calc",legal:"Art. L.441-9 C.com. — Mentions obligatoires",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"ref",l:"Référence devis",ph:"Ex : DEV-2026-042"},{id:"validite",l:"Validité",ph:"Ex : 30 jours"},{id:"prest",l:"Prestations et prix HT",ph:"Ex : Pack CM Instagram : 1 500,00 €\nCréation logo : 800,00 €",type:"textarea"},{id:"tva",l:"TVA",ph:"Ex : 20% / TVA non applicable art. 293B CGI"}],
- gen:v=>`DEVIS
-Conforme Art. L.441-9 du Code de commerce — Mentions obligatoires.
-----------------------------------------
-${v.pre} | SIRET : ${v.siret}
-[Adresse — Tel — Email — N° TVA si assujetti]
+ gen:function(v){return "DEVIS\nConforme Art. L.441-9 du Code de commerce — Mentions obligatoires.\n----------------------------------------\n"+v.pre+" | SIRET : "+v.siret+"\n[Adresse — Tel — Email — N° TVA si assujetti]\n\nDEVIS N° : "+v.ref+" | Date : "+window.TODAY+" | Valable : "+v.validite+"\n\nCLIENT : "+v.cli+"\n\nDESIGNATION DES PRESTATIONS :\n"+v.prest+"\n\nSOUS-TOTAL HT : _________ €\nTVA "+v.tva+" : _________ €\nTOTAL TTC : _________ €\n\nCONDITIONS : Acompte 30% | Solde a livraison | Penalites retard legales.\nReserve de propriete jusqu'au paiement integral.\n\nPour accord : retourner signe avec \"Bon pour accord et execution\".\n"+v.pre+"  |  Date : ___________  |  Signature + cachet :";
+ }},
 
-DEVIS N° : ${v.ref} | Date : ${window.TODAY} | Valable : ${v.validite}
-
-CLIENT : ${v.cli}
-
-DESIGNATION DES PRESTATIONS :
-${v.prest}
-
-SOUS-TOTAL HT : _________ €
-TVA ${v.tva} : _________ €
-TOTAL TTC : _________ €
-
-CONDITIONS : Acompte 30% | Solde a livraison | Penalites retard legales.
-Reserve de propriete jusqu'au paiement integral.
-
-Pour accord : retourner signe avec "Bon pour accord et execution".
-${v.pre}  |  Date : ___________  |  Signature + cachet :`},
-
-{id:"fin-facture",label:"Facture",icon:"receipt",legal:"Art. L.441-9 C.com. — 22 mentions obligatoires",
+{id:"fin-facture",label:"Facture",icon:"invoice",legal:"Art. L.441-9 C.com. — 22 mentions obligatoires",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB SAS"},{id:"siret",l:"SIRET",ph:"Ex : 123 456 789 00012"},{id:"tva_n",l:"N° TVA intracommunautaire",ph:"Ex : FR12123456789"},{id:"siege",l:"Siège",ph:"Ex : 12 rue des Arts 75011 Paris"},{id:"cli",l:"Client (raison sociale + adresse)",ph:"Ex : Elara SARL, 5 rue du Commerce 69001 Lyon"},{id:"siret_c",l:"SIRET client",ph:"Ex : 987 654 321 00014"},{id:"ref",l:"N° facture",ph:"Ex : FAC-2026-042"},{id:"devis",l:"Réf. devis / BC",ph:"Ex : DEV-2026-038"},{id:"prest",l:"Détail prestations",ph:"Ex : Community management mai 2026 : 1 500,00 € HT",type:"textarea"},{id:"tva",l:"TVA",ph:"Ex : 20% / TVA non applicable art. 293B CGI"},{id:"ech",l:"Échéance",ph:"Ex : 30 jours date de facture"}],
- gen:v=>`FACTURE
-Mentions obligatoires — Art. L.441-9 du Code de commerce.
-----------------------------------------
-${v.pre} | SIRET : ${v.siret} | N°TVA : ${v.tva_n} | Siege : ${v.siege}
-[Forme juridique — Capital social — RCS]
-
-FACTURE N° : ${v.ref} | Date : ${window.TODAY} | Ref devis/BC : ${v.devis}
-Date echeance : ${v.ech}
-
-FACTURER A :
-${v.cli}
-SIRET client : ${v.siret_c}
-
-PRESTATIONS :
-${v.prest}
-
-SOUS-TOTAL HT : _________ €
-TVA ${v.tva} : _________ €
-TOTAL TTC : _________ €
-Acompte verse : _________ €
-SOLDE A REGLER : _________ €
-
-REGLEMENT : Virement | IBAN : [FR76 XXXX...] | BIC : [XXX] | Ref : ${v.ref}
-
-PENALITES RETARD (L.441-10 + D.441-5) : 3x taux legal + 40€ forfait.
-
-${v.tva.includes("293")?"TVA non applicable, article 293 B du CGI.":""}
-
-Merci. ${v.pre}`},
+ gen:function(v){return "FACTURE\nMentions obligatoires — Art. L.441-9 du Code de commerce.\n----------------------------------------\n"+v.pre+" | SIRET : "+v.siret+" | N°TVA : "+v.tva_n+" | Siege : "+v.siege+"\n[Forme juridique — Capital social — RCS]\n\nFACTURE N° : "+v.ref+" | Date : "+window.TODAY+" | Ref devis/BC : "+v.devis+"\nDate echeance : "+v.ech+"\n\nFACTURER A :\n"+v.cli+"\nSIRET client : "+v.siret_c+"\n\nPRESTATIONS :\n"+v.prest+"\n\nSOUS-TOTAL HT : _________ €\nTVA "+v.tva+" : _________ €\nTOTAL TTC : _________ €\nAcompte verse : _________ €\nSOLDE A REGLER : _________ €\n\nREGLEMENT : Virement | IBAN : [FR76 XXXX...] | BIC : [XXX] | Ref : "+v.ref+"\n\nPENALITES RETARD (L.441-10 + D.441-5) : 3x taux legal + 40€ forfait.\n\n"+(v.tva.includes("293")?"TVA non applicable, article 293 B du CGI.\n":"")+"\nMerci. "+v.pre;
+ }},
 
 {id:"fin-relance",label:"Relance impayé",icon:"bell",legal:"Art. L.441-10 — Intérêts automatiques sans rappel",
  fields:[{id:"exp",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara SARL"},{id:"fact",l:"Réf. et montant facture",ph:"Ex : FAC-2026-042 — 1 800,00 € TTC"},{id:"ech",l:"Échéance dépassée",ph:"Ex : 15 mai 2026"},{id:"retard",l:"Jours de retard",ph:"Ex : 15 jours"},{id:"niv",l:"Niveau de relance",ph:"Ex : 1ère relance amiable"}],
- gen:v=>`${v.exp} — Le ${window.TODAY}
-${v.niv.toUpperCase()}
-
-A : ${v.cli}
-OBJET : Relance paiement — Facture ${v.fact}
-
-Sauf erreur, la facture ${v.fact} echue le ${v.ech} (${v.retard} de retard)
-reste impayee a ce jour. Merci de regulariser sous 8 jours.
-
-INFORMATION LEGALE (art. L.441-10 C.com.) :
-Des a present, des penalites de retard sont dues de plein droit
-(3x taux interet legal) + indemnite forfaitaire 40€ (D.441-5 C.com.).
-
-Reglement : Virement — IBAN : [A completer] — Ref : [N° facture]
-
-En cas de difficulte, contactez-nous avant d'engager toute procedure.
-A defaut de reponse : recouvrement judiciaire aux frais du debiteur.
-
-[Nom, Signature] | ${v.exp}`},
+ gen:function(v){return v.exp+" — Le "+window.TODAY+"\n"+v.niv.toUpperCase()+"\n\nA : "+v.cli+"\nOBJET : Relance paiement — Facture "+v.fact+"\n\nSauf erreur, la facture "+v.fact+" echue le "+v.ech+" ("+v.retard+" de retard)\nreste impayee a ce jour. Merci de regulariser sous 8 jours.\n\nINFORMATION LEGALE (art. L.441-10 C.com.) :\nDes a present, des penalites de retard sont dues de plein droit\n(3x taux interet legal) + indemnite forfaitaire 40€ (D.441-5 C.com.).\n\nReglement : Virement — IBAN : [A completer] — Ref : [N° facture]\n\nEn cas de difficulte, contactez-nous avant d'engager toute procedure.\nA defaut de reponse : recouvrement judiciaire aux frais du debiteur.\n\n[Nom, Signature] | "+v.exp;
+ }},
 
 {id:"fin-budget",label:"Budget prévisionnel",icon:"chart",legal:"Outil de gestion interne — Base Plan de financement",
  fields:[{id:"ent",l:"Entreprise / projet",ph:"Ex : CRÉALAB — Exercice 2026"},{id:"periode",l:"Période",ph:"Ex : 01/01/2026 — 31/12/2026"},{id:"activite",l:"Activité",ph:"Ex : Agence communication digitale"}],
- gen:v=>`BUDGET PREVISIONNEL
-${v.ent} | Periode : ${v.periode} | Etabli le : ${window.TODAY}
-[Document de gestion interne — Confidentiel]
-----------------------------------------
-1. PRODUITS PREVUS (RECETTES)
-- CA prestations : _________ €
-- CA produits : _________ €
-- Autres produits : _________ €
-TOTAL PRODUITS : _________ €
-
-2. CHARGES PREVUES (DEPENSES)
-Charges fixes :
-- Loyer / charges : _________ €
-- Salaires + charges sociales : _________ €
-- Assurances : _________ €
-- Abonnements outils/logiciels : _________ €
-- Comptabilite / conseil : _________ €
-Charges variables :
-- Achats marchandises/matieres : _________ €
-- Sous-traitance/freelances : _________ €
-- Marketing/publicite : _________ €
-- Frais deplacement : _________ €
-- Reserve imprevus (10%) : _________ €
-TOTAL CHARGES : _________ €
-
-3. RESULTAT PREVISIONNEL
-TOTAL PRODUITS — TOTAL CHARGES = _________ €
-Taux de marge brute prevu : _________ %
-Seuil de rentabilite (point mort) : _________ €
-
-4. TRESORERIE PREVISIONNELLE
-Solde debut : _________ € | Encaissements : _________ €
-Decaissements : _________ € | SOLDE FIN : _________ €
-
-Document etabli le ${window.TODAY} — ${v.ent}`}
+ gen:function(v){return "BUDGET PREVISIONNEL\n"+v.ent+" | Periode : "+v.periode+" | Etabli le : "+window.TODAY+"\n[Document de gestion interne — Confidentiel]\n----------------------------------------\n1. PRODUITS PREVUS (RECETTES)\n- CA prestations : _________ €\n- CA produits : _________ €\n- Autres produits : _________ €\nTOTAL PRODUITS : _________ €\n\n2. CHARGES PREVUES (DEPENSES)\nCharges fixes :\n- Loyer / charges : _________ €\n- Salaires + charges sociales : _________ €\n- Assurances : _________ €\n- Abonnements outils/logiciels : _________ €\n- Comptabilite / conseil : _________ €\nCharges variables :\n- Achats marchandises/matieres : _________ €\n- Sous-traitance/freelances : _________ €\n- Marketing/publicite : _________ €\n- Frais deplacement : _________ €\n- Reserve imprevus (10%) : _________ €\nTOTAL CHARGES : _________ €\n\n3. RESULTAT PREVISIONNEL\nTOTAL PRODUITS — TOTAL CHARGES = _________ €\nTaux de marge brute prevu : _________ %\nSeuil de rentabilite (point mort) : _________ €\n\n4. TRESORERIE PREVISIONNELLE\nSolde debut : _________ € | Encaissements : _________ €\nDecaissements : _________ € | SOLDE FIN : _________ €\n\nDocument etabli le "+window.TODAY+" — "+v.ent;
+ }}
 ]},
 
 {cat:"Ventes & Marketing",catIcon:"mk",docs:[
-{id:"mk-brief",label:"Brief marketing",icon:"offre",legal:"Conforme ARPP — Pratiques loyales L.121-1 C.conso.",
+
+{id:"mk-brief",label:"Brief marketing",icon:"speaker",legal:"Conforme ARPP — Pratiques loyales L.121-1 C.conso.",
  fields:[{id:"ent",l:"Marque / entreprise",ph:"Ex : CRÉALAB"},{id:"prod",l:"Produit / service",ph:"Ex : Transferts DTF"},{id:"obj",l:"Objectif SMART",ph:"Ex : +30% ventes en 3 mois Instagram"},{id:"cible",l:"Cible / persona",ph:"Ex : Femmes 25-45 ans, créatrices"},{id:"bud",l:"Budget",ph:"Ex : 500 € / mois"},{id:"can",l:"Canaux",ph:"Ex : Instagram, email, Pinterest"}],
- gen:v=>`BRIEF MARKETING
-${v.ent} | ${window.TODAY}
-Conforme ARPP + L.121-1 C.conso. (loyaute publicitaire)
-----------------------------------------
-1. CONTEXTE : ${v.ent} developpe "${v.prod}".
-Contraintes legales : identification publicitaire (#pub), prix TTC
-pour les particuliers (L.112-1 C.conso.), consentement RGPD pour tracking.
-
-2. OBJECTIF SMART : ${v.obj}
-
-3. CIBLE : ${v.cible}
-[Ciblage pub en ligne soumis au RGPD et DSA 2023 (Reg. UE 2022/2065)]
-
-4. MESSAGE / ANGLE : ${v.prod} — qualite, unicite, accessibilite.
-Ton : [chaleureux / expert / inspirant]
-
-5. CANAUX : ${v.can.split(",").map(c=>`- ${c.trim()}`).join("\n")}
-
-6. BUDGET : ${v.bud}
-Repartition : 50% creation | 30% media paye | 20% outils/tracking
-
-7. KPIs : Portee | Engagement | Clics | CPA | ROI
-
-8. CONTRAINTES LEGALES
-- Toute pub doit etre identifiable (#pub #partenariat #sponsorise)
-- Images : droits verifies, pas de contrefacon
-- Mentions obligatoires si offre promotionnelle (L.121-1 C.conso.)`},
+ gen:function(v){
+  var canList=v.can.split(",").map(function(c){return "- "+c.trim()+" : contenus natifs, frequence reguliere, engagement prioritaire";}).join("\n");
+  return "BRIEF MARKETING\n"+v.ent+" | "+window.TODAY+"\nConforme ARPP + L.121-1 C.conso. (loyaute publicitaire)\n----------------------------------------\n1. CONTEXTE : "+v.ent+" developpe \""+v.prod+"\".\nContraintes legales : identification publicitaire (#pub), prix TTC\npour les particuliers (L.112-1 C.conso.), consentement RGPD pour tracking.\n\n2. OBJECTIF SMART : "+v.obj+"\n\n3. CIBLE : "+v.cible+"\n[Ciblage pub en ligne soumis au RGPD et DSA 2023 (Reg. UE 2022/2065)]\n\n4. MESSAGE / ANGLE : "+v.prod+" — qualite, unicite, accessibilite.\nTon : [chaleureux / expert / inspirant]\n\n5. CANAUX :\n"+canList+"\n\n6. BUDGET : "+v.bud+"\nRepartition : 50% creation | 30% media paye | 20% outils/tracking\n\n7. KPIs : Portee | Engagement | Clics | CPA | ROI\n\n8. CONTRAINTES LEGALES\n- Toute pub doit etre identifiable (#pub #partenariat #sponsorise)\n- Images : droits verifies, pas de contrefacon\n- Mentions obligatoires si offre promotionnelle (L.121-1 C.conso.)";
+ }},
 
 {id:"mk-propcom",label:"Proposition commerciale",icon:"list",legal:"Conforme pratiques commerciales loyales L.121-1",
  fields:[{id:"pre",l:"Votre entreprise",ph:"Ex : CRÉALAB"},{id:"cli",l:"Client",ph:"Ex : Boutique Elara Mode"},{id:"besoin",l:"Besoin identifié",ph:"Ex : Refonte présence Instagram"},{id:"offre",l:"Votre offre",ph:"Ex : Pack Community Management 3 mois"},{id:"tarif",l:"Tarif",ph:"Ex : 1 500 € HT / mois"},{id:"valeur",l:"Valeur ajoutée",ph:"Ex : Expertise DTF + reporting hebdo"}],
- gen:v=>`PROPOSITION COMMERCIALE
-${v.pre} → ${v.cli} | Ref. PROP-${new Date().getFullYear()}-XXX | ${window.TODAY}
-Valable 30 jours. [Soumise aux CGV de ${v.pre} — disponibles sur demande]
-----------------------------------------
-BESOIN IDENTIFIE : ${v.besoin}
-
-SOLUTION PROPOSEE : ${v.offre}
-
-METHODOLOGIE :
-- Phase 1 — Audit et cadrage : Semaine 1
-- Phase 2 — Mise en oeuvre : Semaines 2-10
-- Phase 3 — Suivi et optimisation : Mensuel
-
-INVESTISSEMENT : ${v.tarif}
-Conditions : acompte 30% | facturation mensuelle | TVA en sus si applicable.
-
-VALEUR AJOUTEE : ${v.valeur}
-
-[Note : Cette proposition ne constitue pas un engagement avant signature
-du devis ou contrat correspondant. Pratiques loyales L.121-1 C.conso.]
-
-${v.pre} — [Nom, Fonction] — ${window.TODAY}`}
+ gen:function(v){return "PROPOSITION COMMERCIALE\n"+v.pre+" -> "+v.cli+" | Ref. PROP-"+(new Date().getFullYear())+"-XXX | "+window.TODAY+"\nValable 30 jours. [Soumise aux CGV de "+v.pre+" — disponibles sur demande]\n----------------------------------------\nBESOIN IDENTIFIE : "+v.besoin+"\n\nSOLUTION PROPOSEE : "+v.offre+"\n\nMETHODOLOGIE :\n- Phase 1 — Audit et cadrage : Semaine 1\n- Phase 2 — Mise en oeuvre : Semaines 2-10\n- Phase 3 — Suivi et optimisation : Mensuel\n\nINVESTISSEMENT : "+v.tarif+"\nConditions : acompte 30% | facturation mensuelle | TVA en sus si applicable.\n\nVALEUR AJOUTEE : "+v.valeur+"\n\n[Note : Cette proposition ne constitue pas un engagement avant signature\ndu devis ou contrat correspondant. Pratiques loyales L.121-1 C.conso.]\n\n"+v.pre+" — [Nom, Fonction] — "+window.TODAY;
+ }}
 ]},
 
 {cat:"Gestion & Management",catIcon:"gest",docs:[
+
 {id:"gest-cr",label:"Compte-rendu de réunion",icon:"edit",legal:"Document interne — Valeur probatoire si signé",
  fields:[{id:"sujet",l:"Sujet / ODJ",ph:"Ex : Revue mensuelle — Juin 2026"},{id:"lieu",l:"Lieu / format",ph:"Ex : Salle A / Teams"},{id:"part",l:"Participants (nom + fonction)",ph:"Ex : Marie D. (DG), Tom L. (Sales)"},{id:"pts",l:"Points abordés",ph:"Ex : Résultats mai, retards, plan Q3...",type:"textarea"},{id:"dec",l:"Décisions et actions",ph:"Ex : Lancer AO avant 20/06, resp. Tom...",type:"textarea"},{id:"red",l:"Rédacteur",ph:"Ex : Julie Oudin, Ops"}],
- gen:v=>`COMPTE-RENDU DE REUNION
-Sujet : ${v.sujet} | Date : ${window.TODAY} | Lieu : ${v.lieu}
-Participants : ${v.part} | Redacteur : ${v.red}
-[Considere valide sauf objection dans les 5 jours suivant diffusion]
-----------------------------------------
-1. RESUME EXECUTIF
-Reunion du ${window.TODAY} sur : ${v.sujet}.
-
-2. POINTS ABORDES
-${v.pts.split("\n").filter(p=>p.trim()).map((p,i)=>`${i+1}. ${p.trim()}`).join("\n")||v.pts}
-
-3. DECISIONS ET PLAN D'ACTION
-${v.dec.split("\n").filter(d=>d.trim()).map((d,i)=>`${i+1}. ${d.trim()}`).join("\n")||v.dec}
-
-4. ACTIONS
---------------------------------------------------
-N° | ACTION           | RESPONSABLE | ECHEANCE
----|------------------|-------------|----------
-1  | [A completer]    | [Nom]       | [Date]
-2  | [A completer]    | [Nom]       | [Date]
---------------------------------------------------
-
-5. PROCHAINE REUNION : [Date a fixer]
-Redige le ${window.TODAY} par ${v.red}`},
+ gen:function(v){
+  var plist=v.pts.split("\n").filter(function(p){return p.trim();}).map(function(p,i){return (i+1)+". "+p.trim();}).join("\n")||v.pts;
+  var dlist=v.dec.split("\n").filter(function(d){return d.trim();}).map(function(d,i){return (i+1)+". "+d.trim();}).join("\n")||v.dec;
+  return "COMPTE-RENDU DE REUNION\nSujet : "+v.sujet+" | Date : "+window.TODAY+" | Lieu : "+v.lieu+"\nParticipants : "+v.part+" | Redacteur : "+v.red+"\n[Considere valide sauf objection dans les 5 jours suivant diffusion]\n----------------------------------------\n1. RESUME EXECUTIF\nReunion du "+window.TODAY+" sur : "+v.sujet+".\n\n2. POINTS ABORDES\n"+plist+"\n\n3. DECISIONS ET PLAN D'ACTION\n"+dlist+"\n\n4. ACTIONS\n--------------------------------------------------\nN° | ACTION           | RESPONSABLE | ECHEANCE\n---|------------------|-------------|----------\n1  | [A completer]    | [Nom]       | [Date]\n2  | [A completer]    | [Nom]       | [Date]\n--------------------------------------------------\n\n5. PROCHAINE REUNION : [Date a fixer]\nRedige le "+window.TODAY+" par "+v.red;
+ }},
 
 {id:"gest-rapport",label:"Rapport d'activité mensuel",icon:"trend",legal:"Document de gestion interne — Confidentiel",
  fields:[{id:"org",l:"Organisation",ph:"Ex : BriefMaker Pro"},{id:"per",l:"Période",ph:"Ex : Mai 2026"},{id:"resp",l:"Responsable",ph:"Ex : Céline Martin, Dirigeante"},{id:"rea",l:"Réalisations",ph:"Ex : Lancement v5, 50 nouveaux utilisateurs...",type:"textarea"},{id:"chf",l:"Chiffres clés",ph:"Ex : CA:1200€, Users:+50, Conv:4%"},{id:"dif",l:"Points d'alerte",ph:"Ex : Retard Stripe, bug mobile"},{id:"nxt",l:"Objectifs mois suivant",ph:"Ex : Newsletter, 100 clients"}],
- gen:v=>`RAPPORT D'ACTIVITE MENSUEL — ${v.per.toUpperCase()}
-${v.org} | Redacteur : ${v.resp} | Date : ${window.TODAY}
-[CONFIDENTIEL — Usage interne uniquement]
-----------------------------------------
-REALISATIONS :
-${v.rea.split("\n").filter(r=>r.trim()).map((r,i)=>`${i+1}. ${r.trim()}`).join("\n")||v.rea}
-
-TABLEAU DE BORD :
-${v.chf.split(",").map(c=>{const p=c.split(":");return p.length>1?`- ${p[0].trim()} : ${p[1].trim()}`:`- ${c.trim()}`}).join("\n")}
-
-POINTS D'ALERTE :
-${v.dif.split(",").map(d=>`- ${d.trim()}`).join("\n")}
-
-PLAN D'ACTION — MOIS SUIVANT :
-${v.nxt.split(",").map((o,i)=>`${i+1}. ${o.trim()}`).join("\n")}
-
-Rapport etabli le ${window.TODAY} — ${v.org}`}
+ gen:function(v){
+  var rea=v.rea.split("\n").filter(function(r){return r.trim();}).map(function(r,i){return (i+1)+". "+r.trim();}).join("\n")||v.rea;
+  var chf=v.chf.split(",").map(function(c){var p=c.split(":");return p.length>1?"- "+p[0].trim()+" : "+p[1].trim():"- "+c.trim();}).join("\n");
+  var dif=v.dif.split(",").map(function(d){return "- "+d.trim();}).join("\n");
+  var nxt=v.nxt.split(",").map(function(o,i){return (i+1)+". "+o.trim();}).join("\n");
+  return "RAPPORT D'ACTIVITE MENSUEL — "+v.per.toUpperCase()+"\n"+v.org+" | Redacteur : "+v.resp+" | Date : "+window.TODAY+"\n[CONFIDENTIEL — Usage interne uniquement]\n----------------------------------------\nREALISATIONS :\n"+rea+"\n\nTABLEAU DE BORD :\n"+chf+"\n\nPOINTS D'ALERTE :\n"+dif+"\n\nPLAN D'ACTION — MOIS SUIVANT :\n"+nxt+"\n\nRapport etabli le "+window.TODAY+" — "+v.org;
+ }}
 ]},
 
 {cat:"Lettres professionnelles",catIcon:"lettre",docs:[
+
 {id:"lp-motivation",label:"Lettre de motivation",icon:"mail",legal:"RGPD — Données candidat protégées",pdfType:"lettre",
- fields:[
-   {id:"candidat",l:"Votre nom complet",ph:"Ex : Marie Dupont"},
-   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},
-   {id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — marie@email.fr"},
-   {id:"ent",l:"Entreprise visée",ph:"Ex : CRÉALAB"},
-   {id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
-   {id:"poste",l:"Poste visé",ph:"Ex : Chargée communication digitale"},
-   {id:"objet",l:"Objet",ph:"Ex : Candidature au poste de Chargée communication"},
-   {id:"corps",l:"Corps de la lettre",ph:"Madame, Monsieur,\n\nC'est avec un vif intérêt que je vous adresse ma candidature...\n\nMon parcours de X années en communication m'a permis de...\n\nJe me tiens disponible pour un entretien.\n\nCordialement,",type:"textarea"}
- ],
- gen:v=>`Madame / Monsieur,
-
-${v.corps}
-
-${v.candidat}
-PJ : Curriculum Vitae`,},
+ fields:[{id:"candidat",l:"Votre nom complet",ph:"Ex : Marie Dupont"},{id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},{id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — marie@email.fr"},{id:"ent",l:"Entreprise visée",ph:"Ex : CRÉALAB"},{id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},{id:"poste",l:"Poste visé",ph:"Ex : Chargée communication digitale"},{id:"objet",l:"Objet",ph:"Ex : Candidature au poste de Chargée communication"},{id:"corps",l:"Corps de la lettre",ph:"Madame, Monsieur,\n\nC'est avec un vif intérêt que je vous adresse ma candidature pour le poste de [poste] au sein de [entreprise].\n\nMon parcours de X années en [domaine] m'a permis de développer [compétences clés].\n\nJe serais ravi(e) de vous rencontrer pour échanger sur ma candidature.\n\nCordialement,",type:"textarea"}],
+ gen:function(v){return v.corps+"\n\n"+v.candidat+"\nPJ : Curriculum Vitae";
+ }},
 
 {id:"lp-demission",label:"Lettre de démission",icon:"door",legal:"Art. L.1237-1 — Préavis selon convention collective",pdfType:"lettre",
- fields:[
-   {id:"salarie",l:"Votre nom complet",ph:"Ex : Jean Dupont"},
-   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 69001 Lyon"},
-   {id:"poste",l:"Votre poste",ph:"Ex : Responsable commercial"},
-   {id:"manager",l:"Destinataire (nom + qualité)",ph:"Ex : Mme Sophie Martin, DRH"},
-   {id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},
-   {id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},
-   {id:"objet",l:"Objet",ph:"Ex : Démission — Poste de Responsable commercial"},
-   {id:"preavis",l:"Durée du préavis",ph:"Ex : 1 mois (convention Syntec)"},
-   {id:"depart",l:"Date de départ estimée",ph:"Ex : 30 juin 2026"},
-   {id:"corps",l:"Corps de la lettre (personnalisez librement)",ph:"Par la présente, je vous notifie ma décision de démissionner de mes fonctions de [poste] au sein de [entreprise], à compter de ce jour.\n\nConformément à l'article L.1237-1 du Code du travail, je respecterai mon préavis de [durée], soit jusqu'au [date de départ].\n\nJe m'engage à assurer la transmission de mes dossiers en cours et à accompagner mon successeur durant cette période.\n\nJe vous remercie pour ces années au sein de [entreprise] et vous adresse mes sincères salutations professionnelles.",type:"textarea"}
- ],
- gen:v=>`${v.corps}
-
-${v.salarie}
-
-Note légale : L'employeur doit remettre à l'échéance :
-- Certificat de travail (art. L.1234-19 C.trav.)
-- Attestation France Travail (art. R.1234-9 C.trav.)
-- Solde de tout compte (art. L.1234-20 C.trav.)`,},
+ fields:[{id:"salarie",l:"Votre nom complet",ph:"Ex : Jean Dupont"},{id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 69001 Lyon"},{id:"poste",l:"Votre poste",ph:"Ex : Responsable commercial"},{id:"manager",l:"Destinataire (nom + qualité)",ph:"Ex : Mme Sophie Martin, DRH"},{id:"ent",l:"Entreprise",ph:"Ex : CRÉALAB SAS"},{id:"adresse_dest",l:"Adresse entreprise",ph:"Ex : 12 rue des Arts, 75011 Paris"},{id:"objet",l:"Objet",ph:"Ex : Démission — Poste de Responsable commercial"},{id:"preavis",l:"Durée du préavis",ph:"Ex : 1 mois (convention Syntec)"},{id:"depart",l:"Date de départ estimée",ph:"Ex : 30 juin 2026"},{id:"corps",l:"Corps de la lettre",ph:"Par la présente, je vous notifie ma décision de démissionner de mes fonctions de [poste] au sein de [entreprise], à compter de ce jour.\n\nConformément à l'article L.1237-1 du Code du travail, j'effectuerai mon préavis de [durée], jusqu'au [date de départ].\n\nJe m'engage à assurer la transmission de mes dossiers et à accompagner mon successeur.\n\nJe vous remercie pour ces années au sein de [entreprise].\n\nVeuillez agréer, Madame, Monsieur, l'expression de mes sincères salutations professionnelles.",type:"textarea"}],
+ gen:function(v){return v.corps+"\n\n"+v.salarie+"\n\nNote : L'employeur doit remettre :\n- Certificat de travail (art. L.1234-19 C.trav.)\n- Attestation France Travail (art. R.1234-9 C.trav.)\n- Solde de tout compte (art. L.1234-20 C.trav.)";
+ }},
 
 {id:"lp-reclamation",label:"Lettre de réclamation",icon:"alert",legal:"Art. L.217-1 garantie légale — Médiation L.612-1",pdfType:"lettre",
- fields:[
-   {id:"exp",l:"Votre nom / entreprise",ph:"Ex : Marie Dupont / CRÉALAB SAS"},
-   {id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},
-   {id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — contact@crealab.fr"},
-   {id:"dest",l:"Destinataire (service + entreprise)",ph:"Ex : Service client — XYZ SARL"},
-   {id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 10 avenue de la Gare, 69002 Lyon"},
-   {id:"objet",l:"Objet de la réclamation",ph:"Ex : Réclamation — Commande n°12345 du 01/05/2026"},
-   {id:"corps",l:"Corps de la lettre (décrivez librement les faits et votre demande)",ph:"J'ai commandé [produit/service] le [date] (référence commande n°XXX).\n\nMalgré [délai], je constate les problèmes suivants :\n- [Problème 1]\n- [Problème 2]\n\nEn application de la garantie légale de conformité (art. L.217-1 et suivants du Code de la consommation), je vous demande [remboursement / remplacement / réparation] dans un délai de 30 jours.\n\nSans réponse satisfaisante, je me réserve le droit de saisir le médiateur de la consommation compétent (art. L.612-1 C.conso.).\n\nVeuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées.",type:"textarea"}
- ],
- gen:v=>`${v.corps}
+ fields:[{id:"exp",l:"Votre nom / entreprise",ph:"Ex : Marie Dupont / CRÉALAB SAS"},{id:"adresse_exp",l:"Votre adresse",ph:"Ex : 5 rue Victor Hugo, 75011 Paris"},{id:"tel_exp",l:"Téléphone / Email",ph:"Ex : 06 12 34 56 78 — contact@crealab.fr"},{id:"dest",l:"Destinataire (service + entreprise)",ph:"Ex : Service client — XYZ SARL"},{id:"adresse_dest",l:"Adresse destinataire",ph:"Ex : 10 avenue de la Gare, 69002 Lyon"},{id:"objet",l:"Objet de la réclamation",ph:"Ex : Réclamation — Commande n°12345 du 01/05/2026"},{id:"corps",l:"Corps de la lettre",ph:"Madame, Monsieur,\n\nJ'ai commandé [produit/service] le [date].\n\nJe constate les problèmes suivants :\n- [Problème 1]\n- [Problème 2]\n\nEn application de la garantie légale de conformité (art. L.217-1 C.conso.), je vous demande [remboursement / remplacement].\n\nSans réponse sous 30 jours, je saisirai le médiateur (art. L.612-1 C.conso.).\n\nVeuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées.",type:"textarea"}],
+ gen:function(v){return v.corps+"\n\n"+v.exp+"\nPJ : [Facture — Photos — Correspondances antérieures]";
+ }}
 
-${v.exp}
-PJ : [Facture — Photos — Correspondances antérieures]`}
 ]}
 ];
+
 
 // ── LOGIQUE APP ───────────────────────────────────────────────
 let allDocs=[], cur=null, lastDoc="";
@@ -1097,6 +946,7 @@ function renderPanel(){
     <div class="actions">
       <button class="btn-gen" onclick="generate()">Générer le document</button>
       <button class="btn-pdf" id="pdfBtn" onclick="exportPDF()" disabled>↓ PDF</button>
+      ${cur.hasExcel ? `<button class="btn-xlsx" id="xlsxBtn" onclick="openProModal()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Excel <span class="pro-badge">PRO</span></button>` : ''}
     </div>
     <div class="result-card" id="resultCard">
       <div class="result-head"><h3 id="resultLabel">Document généré</h3><button class="btn-copy" onclick="copyDoc()">Copier</button></div>
@@ -1120,6 +970,161 @@ function generate(){
   card.style.display="block";
   card.scrollIntoView({behavior:"smooth",block:"nearest"});
   document.getElementById("pdfBtn").disabled=false;
+  // Afficher le bouton Excel si applicable
+  const xb=document.getElementById("xlsxBtn");
+  if(xb) xb.style.display="flex";
+}
+
+function openProModal(){document.getElementById("proModal").classList.add("open");}
+function closeModal(){document.getElementById("proModal").classList.remove("open");}
+// Fermer si clic hors modale
+document.getElementById("proModal").addEventListener("click",function(e){if(e.target===this)closeModal();});
+
+// ── EXPORT XLSX (SheetJS) ─────────────────────────────────────
+function exportXLSX(){
+  if(!window.XLSX||!cur||!cur._lastVals)return;
+  const v=cur._lastVals;
+  const BLUE="1B4F8A", BLUE_L="D6E4F0", BLUE_MID="2E6DB4";
+  const GREEN="1A6B3A", GREEN_L="E8F5EE", GOLD="B8973A";
+  const GREY="4A4A4A", WHITE="FFFFFF", PALE="EBF2FA";
+
+  const wb=XLSX.utils.book_new();
+  const ws={};
+
+  // Helpers
+  const cell=(v,s)=>({v,t:typeof v==="number"?"n":"s",s:s||{}});
+  const hdr=(v,bg,fc)=>({v,t:"s",s:{
+    font:{name:"Arial",bold:true,color:{rgb:fc||WHITE},sz:10},
+    fill:{fgColor:{rgb:bg||BLUE_MID}},
+    alignment:{horizontal:"center",vertical:"center",wrapText:true},
+    border:{top:{style:"thin",color:{rgb:BLUE}},bottom:{style:"thin",color:{rgb:BLUE}},left:{style:"thin",color:{rgb:BLUE}},right:{style:"thin",color:{rgb:BLUE}}}
+  }});
+  const inp=(v,bg)=>({v,t:typeof v==="number"?"n":"s",s:{
+    font:{name:"Arial",sz:9,color:{rgb:"0000CC"}},
+    fill:{fgColor:{rgb:bg||WHITE}},
+    numFmt:"#,##0.00 €",
+    alignment:{horizontal:"right",vertical:"center"},
+    border:{top:{style:"thin",color:{rgb:"D0D8E8"}},bottom:{style:"thin",color:{rgb:"D0D8E8"}},left:{style:"thin",color:{rgb:"D0D8E8"}},right:{style:"thin",color:{rgb:"D0D8E8"}}}
+  }});
+  const lbl=(txt)=>({v:txt,t:"s",s:{
+    font:{name:"Arial",bold:true,sz:9,color:{rgb:GREY}},
+    alignment:{horizontal:"left",vertical:"center"}
+  }});
+  const val=(txt,bg)=>({v:txt,t:typeof txt==="number"?"n":"s",s:{
+    font:{name:"Arial",sz:9,color:{rgb:"1A1815"}},
+    fill:{fgColor:{rgb:bg||WHITE}},
+    alignment:{horizontal:"left",vertical:"center"},
+    border:{bottom:{style:"thin",color:{rgb:"BBBBBB"}}}
+  }});
+  const tot=(v)=>({v,t:"n",s:{
+    font:{name:"Arial",bold:true,sz:10,color:{rgb:WHITE}},
+    fill:{fgColor:{rgb:BLUE}},
+    numFmt:"#,##0.00 €",
+    alignment:{horizontal:"right",vertical:"center"}
+  }});
+  function set(r,c,cellObj){const ref=XLSX.utils.encode_cell({r,c});ws[ref]=cellObj;}
+
+  // ── TITRE ──
+  set(0,0,{v:"NOTE DE FRAIS PROFESSIONNELS",t:"s",s:{font:{name:"Arial",bold:true,sz:16,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE}},alignment:{horizontal:"center",vertical:"center"}}});
+  ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:9}}];
+
+  // ── EN-TÊTE INFOS ──
+  const infos=[
+    ["Société / Employeur :", v.ent],
+    ["Nom du salarié :", v.salarie],
+    ["Poste / Fonction :", v.poste],
+    ["Période :", v.periode],
+    ["Objet / Mission :", v.mission],
+    ["Date de soumission :", window.TODAY],
+    ["Cylindrée véhicule :", v.cv],
+  ];
+  infos.forEach(([l,vl],i)=>{
+    set(2+i,0,lbl(l));
+    set(2+i,1,val(vl||"",PALE));
+    ws["!merges"].push({s:{r:2+i,c:1},e:{r:2+i,c:3}});
+  });
+
+  // ── BARÈME NOTE ──
+  const noteStyle={v:"PLAFONDS URSSAF 2025 :\n• Repas déplacement : 20,70 €/repas\n• Hôtel province : 90 €/nuit\n• Hôtel Paris/IDF : 110 €/nuit",t:"s",s:{font:{name:"Arial",sz:8,italic:true,color:{rgb:GREY}},fill:{fgColor:{rgb:PALE}},alignment:{horizontal:"left",vertical:"top",wrapText:true}}};
+  set(2,5,noteStyle);
+  ws["!merges"].push({s:{r:2,c:5},e:{r:8,c:9}});
+
+  // ── EN-TÊTES TABLEAU ──
+  const hdrs=["Date","Description","Catégorie","Motif","Km","€/km","Mont. IK","Repas","Hôtel","Transport","Carburant","Péages","Divers","TOTAL TTC","Justificatif"];
+  hdrs.forEach((h,i)=>set(11,i,hdr(h)));
+  ws["!merges"].push({s:{r:0,c:0},e:{r:0,c:hdrs.length-1}});
+
+  // ── LIGNES DE DONNÉES ──
+  const cats=["Kilométrique","Repas","Hôtel","Transport","Taxi/VTC","Carburant","Péages","Téléphone","Fournitures","Divers"];
+  for(let i=0;i<12;i++){
+    const r=12+i;
+    const bg=i%2===0?"F7F9FB":WHITE;
+    const brd={top:{style:"thin",color:{rgb:"D0D8E8"}},bottom:{style:"thin",color:{rgb:"D0D8E8"}},left:{style:"thin",color:{rgb:"D0D8E8"}},right:{style:"thin",color:{rgb:"D0D8E8"}}};
+    // Date
+    set(r,0,{v:"",t:"s",s:{font:{name:"Arial",sz:9},fill:{fgColor:{rgb:bg}},alignment:{horizontal:"center"},border:brd}});
+    // Description
+    set(r,1,{v:"",t:"s",s:{font:{name:"Arial",sz:9},fill:{fgColor:{rgb:bg}},border:brd}});
+    // Catégorie
+    set(r,2,{v:cats[i]||"",t:"s",s:{font:{name:"Arial",sz:9},fill:{fgColor:{rgb:bg}},alignment:{horizontal:"center"},border:brd}});
+    // Motif
+    set(r,3,{v:"",t:"s",s:{font:{name:"Arial",sz:9},fill:{fgColor:{rgb:bg}},border:brd}});
+    // Km, €/km, Mont.IK, Repas, Hôtel, Transport, Carburant, Péages, Divers
+    for(let c=4;c<=12;c++){
+      set(r,c,{v:c===4&&i===0?(parseFloat(v.km)||0):c===5&&i===0?(parseFloat(v.taux_ik)||0):c===6&&i===0?((parseFloat(v.km)||0)*(parseFloat(v.taux_ik)||0)):c===7&&i===1?(parseFloat(v.repas)||0):c===8&&i===2?(parseFloat(v.hotel)||0):c===9&&i===3?(parseFloat(v.transport)||0):c===10&&i===5?(parseFloat(v.carburant)||0):c===11&&i===6?(parseFloat(v.peages)||0):c===12&&i===9?(parseFloat(v.divers)||0):0,t:"n",s:{font:{name:"Arial",sz:9,color:{rgb:c<=4?"1A1815":"0000CC"}},fill:{fgColor:{rgb:c>=6&&c<=12?PALE:bg}},numFmt:"#,##0.00",alignment:{horizontal:"right"},border:brd}});
+    }
+    // Total ligne
+    const total=[6,7,8,9,10,11,12].reduce((acc,c)=>{const cell=ws[XLSX.utils.encode_cell({r,c})];return acc+(cell&&cell.v?cell.v:0);},0);
+    set(r,13,{v:total,t:"n",s:{font:{name:"Arial",bold:true,sz:9},fill:{fgColor:{rgb:PALE}},numFmt:"#,##0.00 €",alignment:{horizontal:"right"},border:brd}});
+    set(r,14,{v:i===0||i===1||i===2||i===3?"Joint":"",t:"s",s:{font:{name:"Arial",sz:9},fill:{fgColor:{rgb:bg}},alignment:{horizontal:"center"},border:brd}});
+  }
+
+  // ── LIGNE TOTAUX ──
+  const TR=24;
+  set(TR,0,{v:"TOTAUX",t:"s",s:{font:{name:"Arial",bold:true,sz:10,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE}},alignment:{horizontal:"center"}}});
+  ws["!merges"].push({s:{r:TR,c:0},e:{r:TR,c:5}});
+  const ik=(parseFloat(v.km)||0)*(parseFloat(v.taux_ik)||0);
+  const grandTotal=ik+(parseFloat(v.repas)||0)+(parseFloat(v.hotel)||0)+(parseFloat(v.transport)||0)+(parseFloat(v.carburant)||0)+(parseFloat(v.peages)||0)+(parseFloat(v.divers)||0);
+  [ik,parseFloat(v.repas)||0,parseFloat(v.hotel)||0,parseFloat(v.transport)||0,parseFloat(v.carburant)||0,parseFloat(v.peages)||0,parseFloat(v.divers)||0].forEach((val,i)=>set(TR,6+i,tot(val)));
+  set(TR,13,{v:grandTotal,t:"n",s:{font:{name:"Arial",bold:true,sz:12,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE}},numFmt:"#,##0.00 €",alignment:{horizontal:"right"}}});
+  set(TR,14,{v:"",t:"s",s:{fill:{fgColor:{rgb:BLUE}}}});
+
+  // ── TOTAL REMBOURSABLE ──
+  set(TR+2,0,{v:"TOTAL À REMBOURSER",t:"s",s:{font:{name:"Arial",bold:true,sz:11,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE}},alignment:{horizontal:"center"}}});
+  ws["!merges"].push({s:{r:TR+2,c:0},e:{r:TR+2,c:12}});
+  set(TR+2,13,{v:grandTotal,t:"n",s:{font:{name:"Arial",bold:true,sz:13,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE}},numFmt:"#,##0.00 €",alignment:{horizontal:"right"}}});
+  set(TR+2,14,{v:"",t:"s",s:{fill:{fgColor:{rgb:BLUE}}}});
+
+  // ── VALIDATIONS ──
+  set(TR+4,0,{v:"VALIDATIONS",t:"s",s:{font:{name:"Arial",bold:true,sz:10,color:{rgb:WHITE}},fill:{fgColor:{rgb:BLUE_MID}},alignment:{horizontal:"center"}}});
+  ws["!merges"].push({s:{r:TR+4,c:0},e:{r:TR+4,c:14}});
+  const sigLabels=["Salarié(e) — Nom, Date, Signature","Responsable hiérarchique — Nom, Date, Signature","Direction / Comptabilité — Visa, Date, Règlement"];
+  sigLabels.forEach((l,i)=>{
+    const startC=i*5;
+    set(TR+5,startC,{v:l,t:"s",s:{font:{name:"Arial",sz:9,italic:true,color:{rgb:GREY}},alignment:{horizontal:"center",vertical:"center",wrapText:true},border:{top:{style:"thin",color:{rgb:BLUE_MID}},bottom:{style:"thin",color:{rgb:BLUE_MID}},left:{style:"thin",color:{rgb:BLUE_MID}},right:{style:"thin",color:{rgb:BLUE_MID}}}}});
+    if(i<2) ws["!merges"].push({s:{r:TR+5,c:startC},e:{r:TR+5,c:startC+4}});
+    else ws["!merges"].push({s:{r:TR+5,c:startC},e:{r:TR+5,c:14}});
+  });
+
+  // ── NOTE LÉGALE ──
+  set(TR+7,0,{v:"Note légale URSSAF 2025 : Remboursements exonérés de cotisations dans les limites fixées. Au-delà des plafonds : soumis à cotisations. Conserver justificatifs 3 ans (art. L.3243-4 C.trav.). BriefMaker Croissance.",t:"s",s:{font:{name:"Arial",sz:8,italic:true,color:{rgb:GREY}},fill:{fgColor:{rgb:PALE}},alignment:{horizontal:"left",wrapText:true}}});
+  ws["!merges"].push({s:{r:TR+7,c:0},e:{r:TR+7,c:14}});
+
+  // Dimensions colonnes
+  ws["!cols"]=[
+    {wch:12},{wch:22},{wch:16},{wch:20},
+    {wch:7},{wch:7},{wch:12},
+    {wch:10},{wch:10},{wch:12},
+    {wch:10},{wch:9},{wch:9},
+    {wch:14},{wch:13}
+  ];
+
+  // Dimensions lignes
+  ws["!rows"]=[{hpt:32},...Array(8).fill({hpt:20}),{},{},{hpt:20},{hpt:20},{hpt:20},{hpt:14},{hpt:36},...Array(12).fill({hpt:22}),{hpt:26},{},{hpt:28},{},{hpt:18},{hpt:50},{},{hpt:30}];
+
+  ws["!ref"]=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:TR+8,c:14}});
+
+  XLSX.utils.book_append_sheet(wb,ws,"Note de frais");
+  XLSX.writeFile(wb,`Note-frais-${v.salarie.replace(/\s/g,"-")}-${v.periode.replace(/\s/g,"-")}.xlsx`);
 }
 
 function copyDoc(){
